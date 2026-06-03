@@ -1,0 +1,1706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Community Event Portal</title>
+    
+    <!-- EXERCISE 1.1: Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- EXERCISE 17.1: Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Navigation Styles */
+        nav {
+            background-color: #2c3e50;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-right: 2rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #3498db;
+        }
+
+        /* Welcome Banner Styles */
+        #welcomeBanner {
+            background-color: #3498db;
+            color: white;
+            padding: 3rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        #welcomeBanner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight {
+            background-color: #f39c12;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .special-offer {
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Main Container */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        section {
+            margin: 3rem 0;
+            padding: 2rem;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+
+        section h2 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Gallery Table Styles */
+        #gallery {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #gallery th {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        #gallery td {
+            padding: 1rem;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        #gallery tr:hover {
+            background-color: #ecf0f1;
+        }
+
+        .gallery-image {
+            max-width: 250px;
+            height: auto;
+            border: 3px solid #3498db;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .gallery-image:hover {
+            transform: scale(1.05);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="date"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+
+        input[type="text"]::placeholder,
+        input[type="email"]::placeholder,
+        input[type="tel"]::placeholder,
+        textarea::placeholder {
+            color: #95a5a6;
+        }
+
+        button {
+            background-color: #27ae60;
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #229954;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* Output and Feedback Styles */
+        output {
+            display: block;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #d5f4e6;
+            border-left: 4px solid #27ae60;
+            border-radius: 4px;
+            color: #27ae60;
+            font-weight: 500;
+        }
+
+        .feedback-box {
+            background-color: #fef5e7;
+            border-left: 4px solid #f39c12;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 4px;
+        }
+
+        .char-count {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-top: 0.5rem;
+        }
+
+        /* Video Styles */
+        video {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+
+        #videoStatus {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        /* Preferences and Geolocation Styles */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        #locationStatus {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 4px;
+            background-color: #e3f2fd;
+            border-left: 4px solid #3498db;
+        }
+
+        .location-info {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .location-error {
+            background-color: #ffebee;
+            border-left-color: #e74c3c;
+            color: #c0392b;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .success-message {
+            color: #27ae60;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .enlarged-image {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 80vw;
+            max-height: 80vh;
+            border: 5px solid #fff;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            cursor: pointer;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 999;
+            cursor: pointer;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Page Section Visibility */
+        .page-section {
+            display: none;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            #gallery {
+                font-size: 0.9rem;
+            }
+
+            .gallery-image {
+                max-width: 150px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            nav a {
+                display: block;
+                margin-right: 0;
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+    <!-- EXERCISE 1: External Stylesheet Link -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- EXERCISE 10.1: Bootstrap Responsive Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow">
+        <div class="container-fluid">
+            <!-- EXERCISE 17.1: Bootstrap Icons - Logo with Icon -->
+            <a class="navbar-brand fw-bold" href="#home" onclick="showPage('home')">
+                <i class="bi bi-calendar-event me-2"></i>Community Events
+            </a>
+            
+            <!-- Navbar Toggler for Mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Navbar Links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home" onclick="showPage('home')">
+                            <i class="bi bi-house-door me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#events" onclick="showPage('events')">
+                            <i class="bi bi-ticket-perforated me-1"></i>Events
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#registration" onclick="showPage('registration')">
+                            <i class="bi bi-pencil-square me-1"></i>Register
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#feedback" onclick="showPage('feedback')">
+                            <i class="bi bi-chat-left-dots me-1"></i>Feedback
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#preferences" onclick="showPage('preferences')">
+                            <i class="bi bi-gear me-1"></i>Preferences
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="help.html" target="_blank">
+                            <i class="bi bi-question-circle me-1"></i>Help
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- EXERCISE 13.1: Bootstrap Gradient Banner with Contextual Colors -->
+    <div id="welcomeBanner" class="bg-gradient text-white text-center py-5 shadow-lg">
+        <div class="container">
+            <h1 class="display-3 fw-bold mb-2">
+                <i class="bi bi-stars me-2"></i>Local Community Event Portal
+            </h1>
+            <p class="lead mb-3">Your gateway to community events and local services</p>
+            <p class="mb-0">
+                <span class="badge bg-warning text-dark p-2">
+                    <i class="bi bi-percent me-1"></i>Special Offer: Register Now and Get 20% Off!
+                </span>
+            </p>
+        </div>
+    </div>
+
+    <main>
+        <!-- Home Section - Main Landing Page with Video -->
+        <section id="home" class="page-section active">
+            <h2>Local Community Event Portal</h2>
+            <p style="text-align: center; font-size: 1.1rem; color: #666; margin-bottom: 2rem;"><strong>🎬 Watch Our Community Event Highlights</strong></p>
+            
+            <div style="background: linear-gradient(135deg, rgba(100, 200, 255, 0.1) 0%, rgba(150, 100, 255, 0.1) 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; border: 1px solid rgba(52, 152, 219, 0.2); position: relative; overflow: hidden;">
+                <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(52, 152, 219, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
+                <h3 style="color: #3498db; margin-bottom: 1.5rem; font-size: 1.3rem; font-weight: 600;">Discover Your Community</h3>
+                <p style="font-size: 0.95rem; line-height: 1.7; color: #555; margin-bottom: 1rem;">
+                    Connect with neighbors, make new friends, and create lasting memories through local events. From music festivals to sports competitions, art workshops to family activities—find what excites you.
+                </p>
+                <div style="display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 150px;">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🎯</div>
+                        <p style="font-size: 0.9rem; color: #666;"><strong>Easy Discovery</strong> - Find events that match your interests</p>
+                    </div>
+                    <div style="flex: 1; min-width: 150px;">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🤝</div>
+                        <p style="font-size: 0.9rem; color: #666;"><strong>Community First</strong> - Build connections with your neighbors</p>
+                    </div>
+                    <div style="flex: 1; min-width: 150px;">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">✨</div>
+                        <p style="font-size: 0.9rem; color: #666;"><strong>Live Experiences</strong> - Create unforgettable moments</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="videoStatus"></div>
+            <canvas id="promoCanvas" width="100%" height="400" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 5px; margin: 1.5rem 0; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.2);"></canvas>
+            <p style="text-align: center; color: #666; font-size: 0.95rem;"><em>🎥 Project Promo: Local Community Event Portal - Discover, Connect, Celebrate</em></p>
+            
+            <div style="margin-top: 2rem; padding: 1.5rem; background-color: #f0f8ff; border-left: 4px solid #3498db; border-radius: 4px; text-align: center;">
+                <p><strong>Explore More:</strong> Use the navigation menu to browse events, register, share feedback, save preferences, and find events near you!</p>
+            </div>
+
+            <!-- Community Statistics -->
+            <div style="margin-top: 3rem;">
+                <h3 style="text-align: center; color: #2c3e50; margin-bottom: 2rem;">Our Community Impact</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 8px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                        <div style="font-size: 2.5rem; font-weight: bold; margin-bottom: 0.5rem;" id="eventCount">1000+</div>
+                        <div style="font-size: 1rem;">Events Organized</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 2rem; border-radius: 8px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                        <div style="font-size: 2.5rem; font-weight: bold; margin-bottom: 0.5rem;" id="memberCount">50K+</div>
+                        <div style="font-size: 1rem;">Active Members</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 2rem; border-radius: 8px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                        <div style="font-size: 2.5rem; font-weight: bold; margin-bottom: 0.5rem;" id="happyCount">100K+</div>
+                        <div style="font-size: 1rem;">Happy Attendees</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Event Section -->
+            <div style="margin-top: 3rem; background: linear-gradient(135deg, #fff5e1 0%, #ffe0b2 100%); padding: 2rem; border-radius: 8px; border: 2px solid #ffb74d;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div style="flex: 1;">
+                        <div style="display: inline-block; background-color: #ff6f00; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: bold; margin-bottom: 1rem; font-size: 0.9rem;">FEATURED EVENT</div>
+                        <h3 style="color: #2c3e50; margin: 1rem 0;">🎵 Summer Music Festival 2026</h3>
+                        <p style="color: #666; margin-bottom: 1rem;">Join us for an unforgettable evening of live music performances from local and international artists. Family-friendly event with food vendors and entertainment.</p>
+                        <button onclick="showPage('registration')" style="background-color: #ff6f00; color: white; padding: 0.8rem 2rem; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: background-color 0.3s;">Register Now →</button>
+                    </div>
+                    <div style="flex: 1; text-align: center; padding: 0 2rem;">
+                        <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎸</div>
+                        <p style="color: #666; font-weight: bold;">June 15, 2026</p>
+                        <p style="color: #999;">Central Park • 6:00 PM</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Community Testimonials -->
+            <div style="margin-top: 3rem;">
+                <h3 style="text-align: center; color: #2c3e50; margin-bottom: 2rem;">What Our Community Says</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                    <div style="background-color: #f8f9fa; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #27ae60; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <div style="color: #ff9800; margin-bottom: 0.5rem;">⭐⭐⭐⭐⭐</div>
+                        <p style="color: #666; font-style: italic; margin-bottom: 1rem;">"This portal made it so easy to find and register for events. The community is amazing!"</p>
+                        <p style="color: #2c3e50; font-weight: bold;">- Sarah Johnson</p>
+                    </div>
+                    <div style="background-color: #f8f9fa; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #3498db; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <div style="color: #ff9800; margin-bottom: 0.5rem;">⭐⭐⭐⭐⭐</div>
+                        <p style="color: #666; font-style: italic; margin-bottom: 1rem;">"I've made so many new friends through the events on this platform. Highly recommended!"</p>
+                        <p style="color: #2c3e50; font-weight: bold;">- Michael Chen</p>
+                    </div>
+                    <div style="background-color: #f8f9fa; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #e74c3c; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <div style="color: #ff9800; margin-bottom: 0.5rem;">⭐⭐⭐⭐⭐</div>
+                        <p style="color: #666; font-style: italic; margin-bottom: 1rem;">"Great user interface and helpful features. Love the location-based event finder!"</p>
+                        <p style="color: #2c3e50; font-weight: bold;">- Emily Rodriguez</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Navigation -->
+            <div style="margin-top: 3rem;">
+                <h3 style="text-align: center; color: #2c3e50; margin-bottom: 2rem;">Quick Access</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                    <button onclick="showPage('events')" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: transform 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                        📷 View Events
+                    </button>
+                    <button onclick="showPage('registration')" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: transform 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                        📝 Register Now
+                    </button>
+                    <button onclick="showPage('feedback')" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: transform 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                        ⭐ Leave Feedback
+                    </button>
+                    <button onclick="showPage('preferences')" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; padding: 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: transform 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                        ⚙️ My Preferences
+                    </button>
+                    <button onclick="showPage('geolocation')" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: white; padding: 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: transform 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                        📍 Nearby Events
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exercise 4: Image Gallery for Community Events (Events Page) -->
+        <section id="events" class="page-section">
+            <!-- Events Header with Search and Filter -->
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 3rem 2rem; margin: -2rem -2rem 2rem -2rem; border-radius: 8px 8px 0 0; color: white;">
+                <h2 style="margin: 0 0 1rem 0; font-size: 2.5rem;">Explore Community Events</h2>
+                <p style="margin: 0; opacity: 0.9; font-size: 1.1rem;">Discover amazing events happening in your community • Connect • Celebrate</p>
+            </div>
+
+            <!-- Event Filter -->
+            <div style="background-color: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                <p style="margin: 0 0 1rem 0; font-weight: bold; color: #2c3e50;">Filter by Category:</p>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button class="event-filter-btn" data-category="all" style="padding: 0.7rem 1.5rem; border: 2px solid #667eea; background: #f0f4ff; color: #667eea; border-radius: 20px; cursor: pointer; font-weight: bold; transition: all 0.3s;" onclick="filterEvents('all')">
+                        📋 All Events
+                    </button>
+                    <button class="event-filter-btn" data-category="music" style="padding: 0.7rem 1.5rem; border: 2px solid #ddd; background: white; color: #555; border-radius: 20px; cursor: pointer; font-weight: bold; transition: all 0.3s;" onclick="filterEvents('music')">
+                        🎵 Music
+                    </button>
+                    <button class="event-filter-btn" data-category="sports" style="padding: 0.7rem 1.5rem; border: 2px solid #ddd; background: white; color: #555; border-radius: 20px; cursor: pointer; font-weight: bold; transition: all 0.3s;" onclick="filterEvents('sports')">
+                        🏃 Sports
+                    </button>
+                    <button class="event-filter-btn" data-category="art" style="padding: 0.7rem 1.5rem; border: 2px solid #ddd; background: white; color: #555; border-radius: 20px; cursor: pointer; font-weight: bold; transition: all 0.3s;" onclick="filterEvents('art')">
+                        🎨 Art
+                    </button>
+                    <button class="event-filter-btn" data-category="food" style="padding: 0.7rem 1.5rem; border: 2px solid #ddd; background: white; color: #555; border-radius: 20px; cursor: pointer; font-weight: bold; transition: all 0.3s;" onclick="filterEvents('food')">
+                        🍽️ Food
+                    </button>
+                    <button class="event-filter-btn" data-category="tech" style="padding: 0.7rem 1.5rem; border: 2px solid #ddd; background: white; color: #555; border-radius: 20px; cursor: pointer; font-weight: bold; transition: all 0.3s;" onclick="filterEvents('tech')">
+                        💻 Tech
+                    </button>
+                    <button class="event-filter-btn" data-category="family" style="padding: 0.7rem 1.5rem; border: 2px solid #ddd; background: white; color: #555; border-radius: 20px; cursor: pointer; font-weight: bold; transition: all 0.3s;" onclick="filterEvents('family')">
+                        🎠 Family
+                    </button>
+                </div>
+            </div>
+
+            <!-- Events Grid Gallery -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+                <!-- Event Card 1 -->
+                <div class="event-card" data-category="music" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'">
+                    <div style="position: relative; height: 200px; overflow: hidden;">
+                        <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&h=250&fit=crop" alt="Summer Music Festival" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div style="position: absolute; top: 10px; right: 10px; background: #667eea; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">🎵 Music</div>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <h3 style="color: #2c3e50; margin: 0 0 0.5rem 0;">Summer Music Festival</h3>
+                        <p style="color: #666; font-size: 0.95rem; margin: 0.5rem 0;">Live performances from local artists</p>
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee;">
+                            <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.3rem 0;">📅 June 15, 2026</p>
+                            <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.3rem 0;">📍 Central Park</p>
+                            <p style="color: #27ae60; font-weight: bold; margin-top: 0.8rem;">Attended: 2500+ people</p>
+                        </div>
+                        <button onclick="showPage('registration')" style="width: 100%; margin-top: 1rem; padding: 0.8rem; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: background 0.3s;">Register →</button>
+                    </div>
+                </div>
+
+                <!-- Event Card 2 -->
+                <div class="event-card" data-category="sports" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'">
+                    <div style="position: relative; height: 200px; overflow: hidden;">
+                        <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=400&h=250&fit=crop" alt="Community Sports Day" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div style="position: absolute; top: 10px; right: 10px; background: #e74c3c; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">🏃 Sports</div>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <h3 style="color: #2c3e50; margin: 0 0 0.5rem 0;">Community Sports Day</h3>
+                        <p style="color: #666; font-size: 0.95rem; margin: 0.5rem 0;">Athletic competitions for all ages</p>
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee;">
+                            <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.3rem 0;">📅 July 5, 2026</p>
+                            <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.3rem 0;">📍 City Stadium</p>
+                            <p style="color: #27ae60; font-weight: bold; margin-top: 0.8rem;">Attended: 1800+ people</p>
+                        </div>
+                        <button onclick="showPage('registration')" style="width: 100%; margin-top: 1rem; padding: 0.8rem; background: #e74c3c; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: background 0.3s;">Register →</button>
+                    </div>
+                </div>
+
+                <!-- Event Card 3 -->
+                <div class="event-card" data-category="art" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'">
+                    <div style="position: relative; height: 200px; overflow: hidden;">
+                        <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400&h=250&fit=crop" alt="Art Workshop" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div style="position: absolute; top: 10px; right: 10px; background: #f39c12; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">🎨 Art</div>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <h3 style="color: #2c3e50; margin: 0 0 0.5rem 0;">Local Art Workshop</h3>
+                        <p style="color: #666; font-size: 0.95rem; margin: 0.5rem 0;">Learn techniques from professional artists</p>
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee;">
+                            <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.3rem 0;">📅 July 20, 2026</p>
+                            <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.3rem 0;">📍 Art Gallery Downtown</p>
+                            <p style="color: #27ae60; font-weight: bold; margin-top: 0.8rem;">Attended: 650+ people</p>
+                        </div>
+                        <button onclick="showPage('registration')" style="width: 100%; margin-top: 1rem; padding: 0.8rem; background: #f39c12; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: background 0.3s;">Register →</button>
+                    </div>
+                </div>
+
+                <!-- Event Card 4 -->
+                <div class="event-card" data-category="food" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'">
+                    <div style="position: relative; height: 200px; overflow: hidden;">
+                        <img src="https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=400&h=250&fit=crop" alt="Food Festival" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div style="position: absolute; top: 10px; right: 10px; background: #16a085; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">🍽️ Food</div>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <h3 style="color: #2c3e50; margin: 0 0 0.5rem 0;">Community Food Festival</h3>
+                        <p style="color: #666; font-size: 0.95rem; margin: 0.5rem 0;">Culinary delights from around the world</p>
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee;">
+                            <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.3rem 0;">📅 August 10, 2026</p>
+                            <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.3rem 0;">📍 Riverside Park</p>
+                            <p style="color: #27ae60; font-weight: bold; margin-top: 0.8rem;">Attended: 3200+ people</p>
+                        </div>
+                        <button onclick="showPage('registration')" style="width: 100%; margin-top: 1rem; padding: 0.8rem; background: #16a085; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: background 0.3s;">Register →</button>
+                    </div>
+                </div>
+
+                <!-- Event Card 5 -->
+                <div class="event-card" data-category="tech" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'">
+                    <div style="position: relative; height: 200px; overflow: hidden;">
+                        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=250&fit=crop" alt="Tech Meetup" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div style="position: absolute; top: 10px; right: 10px; background: #3498db; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">💻 Tech</div>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <h3 style="color: #2c3e50; margin: 0 0 0.5rem 0;">Tech & Innovation Meetup</h3>
+                        <p style="color: #666; font-size: 0.95rem; margin: 0.5rem 0;">Connect with tech enthusiasts & innovators</p>
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee;">
+                            <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.3rem 0;">📅 August 25, 2026</p>
+                            <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.3rem 0;">📍 Tech Hub Downtown</p>
+                            <p style="color: #27ae60; font-weight: bold; margin-top: 0.8rem;">Attended: 900+ people</p>
+                        </div>
+                        <button onclick="showPage('registration')" style="width: 100%; margin-top: 1rem; padding: 0.8rem; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: background 0.3s;">Register →</button>
+                    </div>
+                </div>
+
+                <!-- Event Card 6 -->
+                <div class="event-card" data-category="family" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'">
+                    <div style="position: relative; height: 200px; overflow: hidden;">
+                        <img src="https://images.unsplash.com/photo-1464207687429-7505649dae38?w=400&h=250&fit=crop" alt="Children's Fun Day" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div style="position: absolute; top: 10px; right: 10px; background: #e91e63; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">🎠 Family</div>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <h3 style="color: #2c3e50; margin: 0 0 0.5rem 0;">Children's Fun Day</h3>
+                        <p style="color: #666; font-size: 0.95rem; margin: 0.5rem 0;">Games, entertainment & activities for kids</p>
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee;">
+                            <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.3rem 0;">📅 September 5, 2026</p>
+                            <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.3rem 0;">📍 Community Park</p>
+                            <p style="color: #27ae60; font-weight: bold; margin-top: 0.8rem;">Attended: 4100+ people</p>
+                        </div>
+                        <button onclick="showPage('registration')" style="width: 100%; margin-top: 1rem; padding: 0.8rem; background: #e91e63; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: background 0.3s;">Register →</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXERCISE 8: Registration Form with Bootstrap & Custom CSS -->
+        <section id="registration" class="page-section">
+            <!-- EXERCISE 13: Gradient backgrounds with Bootstrap classes -->
+            <div class="bg-gradient text-white py-5 px-4 mb-4 rounded-top" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); margin: -2rem -2rem 0 -2rem;">
+                <div class="container">
+                    <h2 class="display-5 fw-bold mb-2">
+                        <i class="bi bi-pencil-square me-2"></i>Event Registration
+                    </h2>
+                    <p class="lead mb-0">Complete the form • Secure your spot • Instant confirmation</p>
+                </div>
+            </div>
+
+            <!-- EXERCISE 13: Alert/Info box with Bootstrap classes -->
+            <div class="alert alert-info border-start border-4 mb-4">
+                <p class="mb-0"><strong>✅ Fast registration:</strong> Complete the form below to reserve your spot. Secure registration with instant confirmation email.</p>
+            </div>
+
+            <!-- EXERCISE 8: Bootstrap form with proper structure -->
+            <form id="registrationForm" class="needs-validation" novalidate>
+                <!-- EXERCISE 3 & 4: Responsive Grid Layout -->
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
+                        <label for="fullName" class="form-label fw-bold">
+                            <i class="bi bi-person me-2"></i>Full Name:
+                        </label>
+                        <input type="text" class="form-control form-control-lg" id="fullName" name="fullName" placeholder="Enter your full name" required autofocus>
+                        <div class="invalid-feedback">Full name is required.</div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="email" class="form-label fw-bold">
+                            <i class="bi bi-envelope me-2"></i>Email Address:
+                        </label>
+                        <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="your.email@example.com" required>
+                        <div class="invalid-feedback">Valid email is required.</div>
+                    </div>
+                </div>
+
+                <!-- EXERCISE 4: Column Layouts -->
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
+                        <label for="eventDate" class="form-label fw-bold">
+                            <i class="bi bi-calendar-event me-2"></i>Event Date:
+                        </label>
+                        <input type="date" class="form-control form-control-lg" id="eventDate" name="eventDate" required>
+                        <div class="invalid-feedback">Event date is required.</div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="eventType" class="form-label fw-bold">
+                            <i class="bi bi-tag me-2"></i>Select Event Type:
+                        </label>
+                        <select class="form-select form-select-lg" id="eventType" name="eventType" required>
+                            <option value="">-- Select an event --</option>
+                            <option value="music">🎵 Music</option>
+                            <option value="art">🎨 Art</option>
+                            <option value="sports">⚽ Sports</option>
+                            <option value="food">🍽️ Food</option>
+                            <option value="tech">💻 Tech</option>
+                            <option value="family">🎠 Family</option>
+                            
+                        </select>
+                        <div class="invalid-feedback">Event selection is required.</div>
+                        <div id="eventFeeDisplay" class="mt-2 fw-bold text-success"></div>
+                    </div>
+                </div>
+
+                <!-- EXERCISE 3 & 12: Grid with spacing utilities -->
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
+                        <label for="phone" class="form-label fw-bold">
+                            <i class="bi bi-telephone me-2"></i>Phone Number:
+                        </label>
+                        <input type="tel" class="form-control form-control-lg" id="phone" name="phone" placeholder="123-456-7890" required>
+                        <div class="invalid-feedback">Valid phone number is required.</div>
+                        <div class="error-message" id="phoneError"></div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="attendees" class="form-label fw-bold">
+                            <i class="bi bi-people me-2"></i>Number of Attendees:
+                        </label>
+                        <input type="number" class="form-control form-control-lg" id="attendees" name="attendees" min="1" max="10" value="1" required>
+                        <div class="invalid-feedback">Number of attendees is required.</div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="dietaryNeeds" class="form-label fw-bold">
+                        <i class="bi bi-cup-hot me-2"></i>Dietary Preferences:
+                    </label>
+                    <select class="form-select form-select-lg" id="dietaryNeeds" name="dietaryNeeds">
+                        <option value="">-- None --</option>
+                        <option value="vegetarian">🥗 Vegetarian</option>
+                        <option value="vegan">🌱 Vegan</option>
+                        <option value="glutenfree">🌾 Gluten Free</option>
+                        <option value="halal">☪️ Halal</option>
+                        <option value="kosher">✡️ Kosher</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="message" class="form-label fw-bold">
+                        <i class="bi bi-chat-left-text me-2"></i>Additional Comments:
+                    </label>
+                    <textarea class="form-control" id="message" name="message" rows="4" placeholder="Any special requirements or questions?" required></textarea>
+                    <div class="form-text">Character count: <span id="charCount">0</span>/500</div>
+                    <div class="invalid-feedback">Please provide additional comments.</div>
+                </div>
+
+                <!-- EXERCISE 8 & 9: Bootstrap form check (checkboxes) -->
+                <div class="bg-light p-3 rounded-3 mb-3 border border-2 border-info">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="newsletter" name="newsletter">
+                        <label class="form-check-label" for="newsletter">
+                            <i class="bi bi-envelope me-2"></i>Subscribe to event updates and community news
+                        </label>
+                    </div>
+                </div>
+
+                <!-- EXERCISE 13: Warning alert with Bootstrap classes -->
+                <div class="alert alert-warning border-start border-4 mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
+                        <label class="form-check-label" for="terms">
+                            I agree to the terms and conditions and confirm my attendance
+                        </label>
+                        <div class="invalid-feedback">You must agree to the terms and conditions.</div>
+                    </div>
+                </div>
+
+                <!-- EXERCISE 9: Bootstrap button variants with custom styling -->
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+                    <button type="reset" class="btn btn-outline-secondary btn-lg" onclick="document.getElementById('registrationForm').reset();">
+                        <i class="bi bi-arrow-counterclockwise me-2"></i>Clear Form
+                    </button>
+                    <button type="submit" class="btn btn-lg btn-gradient" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none;">
+                        <i class="bi bi-check-circle me-2"></i>Register for Event
+                    </button>
+                </div>
+            </form>
+
+            <output id="confirmationOutput"></output>
+        </section>
+
+        <!-- EXERCISE 8 & 13: Feedback Form with Bootstrap & Custom CSS -->
+        <section id="feedback" class="page-section">
+            <!-- EXERCISE 13: Gradient header -->
+            <div class="bg-gradient text-white py-5 px-4 mb-4 rounded-top" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); margin: -2rem -2rem 0 -2rem;">
+                <div class="container">
+                    <h2 class="display-5 fw-bold mb-2">
+                        <i class="bi bi-chat-left-heart me-2"></i>Event Feedback
+                    </h2>
+                    <p class="lead mb-0">Help us improve • Share your experience • Make a difference</p>
+                </div>
+            </div>
+
+            <!-- EXERCISE 13: Alert box -->
+            <div class="alert alert-info border-start border-4 mb-4">
+                <p class="mb-0"><strong>⭐ Your feedback matters!</strong> Help us understand what worked well and where we can improve. It typically takes 2-3 minutes to complete.</p>
+            </div>
+
+            <!-- EXERCISE 3 & 4: Feedback form with responsive grid -->
+            <form id="feedbackForm" class="needs-validation" novalidate>
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
+                        <label for="feedbackEventAttended" class="form-label fw-bold">
+                            <i class="bi bi-calendar-check me-2"></i>Which event did you attend?
+                        </label>
+                        <select class="form-select form-select-lg" id="feedbackEventAttended" required>
+                            <option value="">-- Select event --</option>
+                            <option value="music">🎵 Summer Music Festival</option>
+                            <option value="sports">🏃 Sports Day</option>
+                            <option value="art">🎨 Art Workshop</option>
+                            <option value="food">🍽️ Food Festival</option>
+                            <option value="tech">💻 Tech Meetup</option>
+                            <option value="kids">🎠 Children's Fun Day</option>
+                        </select>
+                        <div class="invalid-feedback">Please select an event.</div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="feedbackRating" class="form-label fw-bold">
+                            <i class="bi bi-star-fill me-2"></i>Overall Event Rating:
+                        </label>
+                        <select class="form-select form-select-lg" id="feedbackRating" required>
+                            <option value="">-- Select rating --</option>
+                            <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                            <option value="4">⭐⭐⭐⭐ Very Good</option>
+                            <option value="3">⭐⭐⭐ Good</option>
+                            <option value="2">⭐⭐ Fair</option>
+                            <option value="1">⭐ Poor</option>
+                        </select>
+                        <div class="invalid-feedback">Please select a rating.</div>
+                        <div id="feedbackDisplay" class="feedback-box mt-2" style="display:none;"></div>
+                    </div>
+                </div>
+
+                <!-- EXERCISE 4: Two-column layout -->
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
+                        <label for="feedbackVenue" class="form-label fw-bold">
+                            <i class="bi bi-geo-alt me-2"></i>Venue & Location Rating:
+                        </label>
+                        <select class="form-select form-select-lg" id="feedbackVenue" required>
+                            <option value="">-- Select rating --</option>
+                            <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                            <option value="4">⭐⭐⭐⭐ Very Good</option>
+                            <option value="3">⭐⭐⭐ Good</option>
+                            <option value="2">⭐⭐ Fair</option>
+                            <option value="1">⭐ Poor</option>
+                        </select>
+                        <div class="invalid-feedback">Please select a rating.</div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="feedbackOrganization" class="form-label fw-bold">
+                            <i class="bi bi-person-check me-2"></i>Organization & Staff Rating:
+                        </label>
+                        <select class="form-select form-select-lg" id="feedbackOrganization" required>
+                            <option value="">-- Select rating --</option>
+                            <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                            <option value="4">⭐⭐⭐⭐ Very Good</option>
+                            <option value="3">⭐⭐⭐ Good</option>
+                            <option value="2">⭐⭐ Fair</option>
+                            <option value="1">⭐ Poor</option>
+                        </select>
+                        <div class="invalid-feedback">Please select a rating.</div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="feedbackText" class="form-label fw-bold">
+                        <i class="bi bi-pencil me-2"></i>Your Detailed Feedback:
+                    </label>
+                    <textarea class="form-control" id="feedbackText" rows="4" placeholder="Share your thoughts, what you loved, and suggestions for improvement..." maxlength="500" required></textarea>
+                    <div class="form-text">Characters: <span id="feedbackCharCount">0</span>/500</div>
+                    <div class="invalid-feedback">Please provide feedback.</div>
+                </div>
+
+                <!-- EXERCISE 8 & 12: Bootstrap form checks with spacing -->
+                <div class="bg-light p-3 rounded-3 mb-3 border border-2 border-info">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="feedbackRecommend">
+                        <label class="form-check-label" for="feedbackRecommend">
+                            <i class="bi bi-hand-thumbs-up me-2"></i>I would recommend this event
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="feedbackFollowUp">
+                        <label class="form-check-label" for="feedbackFollowUp">
+                            <i class="bi bi-telephone me-2"></i>Contact me for follow-up
+                        </label>
+                    </div>
+                </div>
+
+                <!-- EXERCISE 9: Bootstrap button with gradient -->
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+                    <button type="reset" class="btn btn-outline-secondary btn-lg">
+                        <i class="bi bi-arrow-counterclockwise me-2"></i>Clear Form
+                    </button>
+                    <button type="button" id="submitFeedback" class="btn btn-lg btn-gradient" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; border: none;">
+                        <i class="bi bi-send me-2"></i>Submit Feedback
+                    </button>
+                </div>
+            </form>
+            <div id="feedbackConfirmation" style="display:none; margin-top:1rem;"></div>
+        </section>
+
+        <!-- EXERCISE 8 & 12: Preferences Form with Bootstrap -->
+        <section id="preferences" class="page-section">
+            <!-- EXERCISE 13: Gradient header -->
+            <div class="bg-gradient text-white py-5 px-4 mb-4 rounded-top" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); margin: -2rem -2rem 0 -2rem;">
+                <div class="container">
+                    <h2 class="display-5 fw-bold mb-2">
+                        <i class="bi bi-sliders me-2"></i>My Preferences
+                    </h2>
+                    <p class="lead mb-0">Customize your experience • Get personalized recommendations • Manage your data</p>
+                </div>
+            </div>
+
+            <!-- EXERCISE 13: Info alert -->
+            <div class="alert alert-info border-start border-4 mb-4">
+                <p class="mb-0"><strong>💡 Why preferences?</strong> Save your favorite event types and we'll personalize your experience on future visits. Your preferences are stored locally and never shared.</p>
+            </div>
+
+            <form id="preferencesForm" class="needs-validation" novalidate>
+                <!-- EXERCISE 3 & 12: Responsive grid with spacing -->
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
+                        <label for="preferredEventType" class="form-label fw-bold">
+                            <i class="bi bi-heart me-2"></i>Preferred Event Type:
+                        </label>
+                        <select class="form-select form-select-lg" id="preferredEventType">
+                            <option value="">-- Select preference --</option>
+                            <option value="music">🎵 Music Events</option>
+                            <option value="sports">🏃 Sports Events</option>
+                            <option value="art">🎨 Art Events</option>
+                            <option value="food">🍽️ Food Events</option>
+                            <option value="tech">💻 Tech Events</option>
+                            <option value="kids">🎠 Family Events</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="notificationFrequency" class="form-label fw-bold">
+                            <i class="bi bi-bell me-2"></i>Notification Frequency:
+                        </label>
+                        <select class="form-select form-select-lg" id="notificationFrequency">
+                            <option value="daily">📅 Daily</option>
+                            <option value="weekly" selected>📆 Weekly</option>
+                            <option value="monthly">📋 Monthly</option>
+                            <option value="never">⏸️ Never</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="priceRange" class="form-label fw-bold">
+                        <i class="bi bi-coin me-2"></i>Preferred Price Range:
+                    </label>
+                    <select class="form-select form-select-lg" id="priceRange">
+                        <option value="">💰 Any price</option>
+                        <option value="free">🎉 Free Events</option>
+                        <option value="budget">💵 Budget Friendly ($0-$20)</option>
+                        <option value="moderate">💸 Moderate ($20-$50)</option>
+                        <option value="premium">💎 Premium ($50+)</option>
+                    </select>
+                </div>
+
+                <!-- EXERCISE 8 & 12: Bootstrap form checks with spacing -->
+                <div class="bg-light p-3 rounded-3 mb-3 border border-2 border-warning">
+                    <p class="fw-bold mb-3"><i class="bi bi-megaphone me-2"></i>Notification Preferences:</p>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="preferEmailUpdates" checked>
+                        <label class="form-check-label" for="preferEmailUpdates">
+                            <i class="bi bi-envelope me-2"></i>Email me about new events
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="preferSMSUpdates">
+                        <label class="form-check-label" for="preferSMSUpdates">
+                            <i class="bi bi-chat-left me-2"></i>SMS updates (optional)
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="preferOnSiteNotifications" checked>
+                        <label class="form-check-label" for="preferOnSiteNotifications">
+                            <i class="bi bi-bell me-2"></i>Show notifications on this website
+                        </label>
+                    </div>
+                </div>
+
+                <!-- EXERCISE 13: Success alert -->
+                <div id="savedPreferencesDisplay" class="alert alert-success border-start border-4 mb-3" style="display: none;">
+                    <p class="fw-bold mb-0"><i class="bi bi-check-circle me-2"></i>Your preferences have been saved!</p>
+                    <p id="preferenceSummary" class="mb-0 mt-2 small"></p>
+                </div>
+
+                <!-- EXERCISE 9: Bootstrap button group -->
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="button" onclick="savePreferences()" class="btn btn-lg btn-gradient" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; border: none;">
+                        <i class="bi bi-download me-2"></i>Save Preferences
+                    </button>
+                    <button type="button" onclick="clearAllData()" class="btn btn-lg btn-danger">
+                        <i class="bi bi-trash me-2"></i>Clear All Data
+                    </button>
+                </div>
+
+                <div id="preferenceStatus" class="mt-3"></div>
+            </form>
+        </section>
+
+        <!-- EXERCISE 16 & 14: Geolocation Section with Bootstrap -->
+        <section id="geolocation" class="page-section">
+            <!-- EXERCISE 13: Gradient header -->
+            <div class="bg-gradient text-white py-5 px-4 mb-4 rounded-top" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); margin: -2rem -2rem 0 -2rem;">
+                <div class="container">
+                    <h2 class="display-5 fw-bold mb-2">
+                        <i class="bi bi-geo-alt me-2"></i>Find Nearby Events
+                    </h2>
+                    <p class="lead mb-0">Discover events in your area • Location-based recommendations • Never miss a local event</p>
+                </div>
+            </div>
+
+            <!-- EXERCISE 13: Info alert -->
+            <div class="alert alert-info border-start border-4 mb-4">
+                <p class="mb-0"><strong>📍 How it works:</strong> Click the button below to share your location and we'll show you events happening near you. Your location is only used for this session.</p>
+            </div>
+
+            <!-- EXERCISE 9: Large button with icon -->
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4">
+                <button type="button" onclick="findNearbyEvents()" class="btn btn-lg btn-gradient" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: white; border: none;">
+                    <i class="bi bi-geo-alt me-2"></i>Find Nearby Events
+                </button>
+            </div>
+
+            <!-- EXERCISE 14: Responsive display of location -->
+            <div id="locationStatus" class="alert alert-info border-start border-4" style="display:none;"></div>
+        </section>
+
+    <!-- Footer -->
+    <footer>
+        <!-- Footer Comment -->
+        <p>&copy; 2026 Local Community Event Portal. All rights reserved.</p>
+        <p>Built with HTML5 | Optimized for All Browsers</p>
+    </footer>
+
+    <!-- BOOTSTRAP 5 MODALS & COMPONENTS -->
+    
+    <!-- EXERCISE 18.1: Bootstrap Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="bi bi-info-circle me-2"></i>Bootstrap Modal Example
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Welcome to Bootstrap 5 Modals!</strong></p>
+                    <p>This is a demonstration of Bootstrap's modal component. Modals are useful for:</p>
+                    <ul class="list-group">
+                        <li class="list-group-item"><i class="bi bi-check-circle text-success me-2"></i>Displaying important information</li>
+                        <li class="list-group-item"><i class="bi bi-check-circle text-success me-2"></i>Collecting user input</li>
+                        <li class="list-group-item"><i class="bi bi-check-circle text-success me-2"></i>Confirming actions</li>
+                        <li class="list-group-item"><i class="bi bi-check-circle text-success me-2"></i>Showing alerts or warnings</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Learn More</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXERCISE 18.2: Bootstrap Accordion Modal -->
+    <div class="modal fade" id="accordionModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">
+                        <i class="bi bi-list-check me-2"></i>Bootstrap Accordion
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="accordion" id="accordionExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                    <i class="bi bi-question-circle me-2"></i>What is Bootstrap?
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    Bootstrap is the most popular CSS framework for responsive, mobile-first websites.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                    <i class="bi bi-question-circle me-2"></i>Why use Bootstrap?
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    Bootstrap saves time with pre-built components and provides a responsive grid system.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                                    <i class="bi bi-question-circle me-2"></i>How to customize Bootstrap?
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    You can customize Bootstrap using Sass variables or by overriding CSS classes.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container for Bootstrap Toasts -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="bootstrapToast" class="toast" role="alert">
+            <div class="toast-header bg-info text-white">
+                <i class="bi bi-chat-left-text me-2"></i>
+                <strong class="me-auto">Bootstrap Toast</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body">
+                <i class="bi bi-check-circle text-success me-2"></i>
+                This is a Bootstrap Toast notification! Perfect for alerts and feedback.
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay for enlarged images -->
+    <div id="overlay" class="overlay"></div>
+    <img id="enlargedImage" class="enlarged-image" style="display:none;" src="" alt="">
+
+    <!-- Exercise 10: JavaScript for all interactive features -->
+    <script>
+        console.log('Local Community Event Portal - Loaded Successfully');
+
+        // ==================== Page Navigation System ====================
+        // Show/hide sections based on navigation
+        function showPage(pageId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.page-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show selected section
+            const selectedSection = document.getElementById(pageId);
+            if (selectedSection) {
+                selectedSection.classList.add('active');
+                console.log(`Page switched to: ${pageId}`);
+            }
+
+            // Hide banner on events, registration, feedback, and preferences pages
+            const welcomeBanner = document.getElementById('welcomeBanner');
+            if (['events', 'registration', 'feedback', 'preferences'].includes(pageId)) {
+                welcomeBanner.style.display = 'none';
+            } else {
+                welcomeBanner.style.display = 'block';
+            }
+        }
+
+        // Navigation click handlers
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                
+                // Check if it's an internal link (starts with #)
+                if (href.startsWith('#') && !href.includes('.html')) {
+                    e.preventDefault();
+                    const pageId = href.substring(1);
+                    showPage(pageId);
+                }
+                // External links (help.html) will open normally
+            });
+        });
+
+        // Handle browser back/forward buttons
+        window.addEventListener('hashchange', function() {
+            const pageId = window.location.hash.substring(1) || 'home';
+            showPage(pageId);
+        });
+
+        // ==================== HTML5 Canvas Promo Video Animation ====================
+        const canvas = document.getElementById('promoCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            canvas.width = container.offsetWidth;
+            canvas.height = 400;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        let animationTime = 0;
+        const totalDuration = 8000; // 8 seconds
+
+        function drawPromoVideo() {
+            // Clear canvas with gradient
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const progress = (animationTime % totalDuration) / totalDuration;
+
+            // Title - appears first
+            if (progress < 0.15) {
+                const alpha = Math.min(progress / 0.15, 1);
+                ctx.globalAlpha = alpha;
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = 'bold 48px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('Local Community Event Portal', canvas.width / 2, 80);
+                ctx.globalAlpha = 1;
+            } else {
+                ctx.globalAlpha = 1;
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = 'bold 48px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('Local Community Event Portal', canvas.width / 2, 80);
+            }
+
+            // Subtitle
+            ctx.fillStyle = '#E8E8FF';
+            ctx.font = '24px Arial';
+            ctx.fillText('Discover • Connect • Celebrate', canvas.width / 2, 130);
+
+            // Feature boxes animation
+            const features = [
+                { icon: '📷', title: 'Event Gallery', y: 180 },
+                { icon: '📝', title: 'Easy Registration', y: 240 },
+                { icon: '⭐', title: 'Share Feedback', y: 300 }
+            ];
+
+            const boxWidth = 180;
+            const boxHeight = 60;
+            const spacing = (canvas.width - (boxWidth * 3)) / 4;
+
+            features.forEach((feature, index) => {
+                const featureProgress = (progress - (0.2 + index * 0.15)) / 0.15;
+                
+                if (featureProgress >= -0.1 && featureProgress <= 1.2) {
+                    const x = spacing + index * (boxWidth + spacing);
+                    const scaleProgress = Math.max(0, Math.min(featureProgress, 1));
+                    const scale = 0.8 + scaleProgress * 0.2;
+                    
+                    const centerX = x + boxWidth / 2;
+                    const centerY = feature.y + boxHeight / 2;
+
+                    ctx.save();
+                    ctx.translate(centerX, centerY);
+                    ctx.scale(scale, scale);
+                    ctx.translate(-centerX, -centerY);
+
+                    // Box
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+                    ctx.fillRect(x, feature.y, boxWidth, boxHeight);
+                    
+                    // Border
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(x, feature.y, boxWidth, boxHeight);
+
+                    // Icon
+                    ctx.font = 'bold 24px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillText(feature.icon, centerX, centerY - 15);
+
+                    // Title
+                    ctx.font = '12px Arial';
+                    ctx.fillText(feature.title, centerX, centerY + 15);
+
+                    ctx.restore();
+                }
+            });
+
+            // Bottom text - appears at end
+            if (progress > 0.75) {
+                const fadeAlpha = (progress - 0.75) / 0.25;
+                ctx.globalAlpha = fadeAlpha;
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = '16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Start exploring your community today!', canvas.width / 2, canvas.height - 30);
+                ctx.globalAlpha = 1;
+            }
+
+            animationTime += 16; // ~60fps
+            requestAnimationFrame(drawPromoVideo);
+        }
+
+        drawPromoVideo();
+
+        // ==================== Event Page Filtering Function ====================
+        function filterEvents(category) {
+            const cards = document.querySelectorAll('.event-card');
+            const buttons = document.querySelectorAll('.event-filter-btn');
+            
+            // Update button styles - highlight the active button
+            buttons.forEach(btn => {
+                const btnCategory = btn.getAttribute('data-category');
+                if (btnCategory === category) {
+                    // Active button style
+                    btn.style.borderColor = '#667eea';
+                    btn.style.color = '#667eea';
+                    btn.style.backgroundColor = '#f0f4ff';
+                    btn.style.boxShadow = '0 2px 8px rgba(102, 126, 234, 0.3)';
+                } else {
+                    // Inactive button style
+                    btn.style.borderColor = '#ddd';
+                    btn.style.color = '#555';
+                    btn.style.backgroundColor = 'white';
+                    btn.style.boxShadow = 'none';
+                }
+            });
+
+            // Show/hide cards based on category
+            cards.forEach(card => {
+                const cardCategory = card.getAttribute('data-category');
+                if (category === 'all' || cardCategory === category) {
+                    card.style.display = 'block';
+                    card.style.animation = 'fadeIn 0.5s ease-in-out';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            console.log(`✅ Events filtered by: ${category}`);
+        }
+
+        // ==================== Exercise 6: Event Handling ====================
+
+        // Phone validation with onblur
+        document.getElementById('phone').addEventListener('blur', function() {
+            const phoneRegex = /^\d{3}-\d{3}-\d{4}$/;
+            const phoneError = document.getElementById('phoneError');
+            
+            if (this.value && !phoneRegex.test(this.value)) {
+                phoneError.textContent = 'Please enter phone in format: 123-456-7890';
+            } else {
+                phoneError.textContent = '';
+            }
+        });
+
+        // Event fee display with onchange
+        document.getElementById('eventType').addEventListener('change', function() {
+            const fees = {
+                'music': '$15',
+                'sports': '$10',
+                'art': '$20',
+                'food': '$25',
+                'tech': 'Free',
+                'kids': '$12'
+            };
+            
+            const feeDisplay = document.getElementById('eventFeeDisplay');
+            if (this.value) {
+                feeDisplay.textContent = `Event Fee: ${fees[this.value]}`;
+            } else {
+                feeDisplay.textContent = '';
+            }
+        });
+
+        // Character counter with keyboard events
+        document.getElementById('message').addEventListener('keypress', function(event) {
+            console.log(`Key pressed: ${event.key}`);
+            document.getElementById('charCount').textContent = this.value.length;
+        });
+
+        document.getElementById('message').addEventListener('keyup', function() {
+            document.getElementById('charCount').textContent = this.value.length;
+        });
+
+        // Feedback character counter with keyboard events
+        document.getElementById('feedbackText').addEventListener('keyup', function() {
+            document.getElementById('feedbackCharCount').textContent = this.value.length;
+            const lastKey = event.key || 'typing';
+            document.getElementById('keyEvent').textContent = `(Last: ${lastKey})`;
+        });
+
+        // Feedback rating with onchange
+        document.getElementById('feedbackRating').addEventListener('change', function() {
+            const display = document.getElementById('feedbackDisplay');
+            const ratings = {
+                '1': 'Thanks for your feedback. We will work to improve.',
+                '2': 'We appreciate your feedback and will address your concerns.',
+                '3': 'Thank you! We are glad you had a good experience.',
+                '4': 'Excellent! We are thrilled you enjoyed the event.',
+                '5': 'Outstanding! Thank you for the wonderful feedback!'
+            };
+            
+            if (this.value) {
+                display.textContent = ratings[this.value];
+                display.style.display = 'block';
+            } else {
+                display.style.display = 'none';
+            }
+        });
+
+        function showConfirmation() {
+            const name = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const eventType = document.getElementById('eventType').value;
+            const output = document.getElementById('confirmationOutput');
+            
+            output.textContent = `✓ Registration Successful! Hi ${name}, your registration for the selected event has been confirmed. A confirmation email will be sent to ${email}.`;
+            output.style.display = 'block';
+            
+            console.log('Registration submitted:', { name, email, eventType });
+        }
+
+        document.getElementById('submitFeedback').addEventListener('click', function() {
+            const rating = document.getElementById('feedbackRating').value;
+            const feedback = document.getElementById('feedbackText').value;
+            
+            if (rating && feedback) {
+                const confirmation = document.getElementById('feedbackConfirmation');
+                confirmation.textContent = '✓ Thank you for your feedback! Your response has been recorded.';
+                confirmation.style.display = 'block';
+                confirmation.style.background = '#d4edda';
+                confirmation.style.color = '#155724';
+                confirmation.style.padding = '1rem';
+                confirmation.style.borderRadius = '4px';
+            } else {
+                alert('Please provide both rating and feedback');
+            }
+        });
+
+        // Image enlarge with ondblclick
+        const galleryImages = document.querySelectorAll('.gallery-image');
+        galleryImages.forEach(img => {
+            img.addEventListener('dblclick', function() {
+                const enlarged = document.getElementById('enlargedImage');
+                const overlay = document.getElementById('overlay');
+                enlarged.src = this.src;
+                enlarged.style.display = 'block';
+                overlay.classList.add('active');
+            });
+        });
+
+        // Close enlarged image
+        document.getElementById('overlay').addEventListener('click', function() {
+            document.getElementById('enlargedImage').style.display = 'none';
+            this.classList.remove('active');
+        });
+
+        document.getElementById('enlargedImage').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // ==================== Exercise 7: Video Events ====================
+
+        const video = document.querySelector('video');
+        const videoStatus = document.getElementById('videoStatus');
+
+        video.addEventListener('canplay', function() {
+            videoStatus.textContent = '▶ Video ready to play!';
+            videoStatus.style.display = 'block';
+            console.log('Video can play');
+        });
+
+        video.addEventListener('playing', function() {
+            videoStatus.textContent = '▶ Now playing...';
+        });
+
+        video.addEventListener('pause', function() {
+            videoStatus.textContent = '⏸ Video paused';
+        });
+
+        // ==================== Exercise 8: Storage & Preferences ====================
+
+        // Load preferences on page load
+        window.addEventListener('load', function() {
+            const savedPreference = localStorage.getItem('preferredEventType');
+            if (savedPreference) {
+                document.getElementById('preferredEventType').value = savedPreference;
+                console.log('Preferences loaded from localStorage:', savedPreference);
+            }
+        });
+
+        // ==================== Exercise 8: Save/Clear Preferences Functions ====================
+        
+        function savePreferences() {
+            const preference = document.getElementById('preferredEventType').value;
+            const notification = document.getElementById('notificationFrequency').value;
+            const priceRange = document.getElementById('priceRange').value;
+            const emailUpdates = document.getElementById('preferEmailUpdates').checked;
+            const smsUpdates = document.getElementById('preferSMSUpdates').checked;
+            const onSiteNotif = document.getElementById('preferOnSiteNotifications').checked;
+            
+            if (preference === '') {
+                alert('⚠️ Please select a preferred event type first!');
+                return;
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('preferredEventType', preference);
+            localStorage.setItem('notificationFrequency', notification);
+            localStorage.setItem('priceRange', priceRange);
+            localStorage.setItem('emailUpdates', emailUpdates);
+            localStorage.setItem('smsUpdates', smsUpdates);
+            localStorage.setItem('onSiteNotifications', onSiteNotif);
+            
+            console.log('✅ Preferences saved!');
+            alert('✅ Preferences saved successfully!');
+            
+            // Show success message
+            document.getElementById('savedPreferencesDisplay').style.display = 'block';
+            document.getElementById('preferenceSummary').textContent = `Event Type: ${preference} • Notifications: ${notification} • Price Range: ${priceRange || 'Any'}`;
+            document.getElementById('preferenceStatus').innerHTML = '<div style="background: #d4edda; color: #155724; padding: 1rem; border-radius: 4px; border-left: 4px solid #28a745; margin-top: 1rem;"><strong>✅ Preferences Saved!</strong><br>Your settings are saved locally.</div>';
+        }
+        
+        function clearAllData() {
+            if (confirm('⚠️ Are you sure you want to clear ALL saved preferences and data?')) {
+                // Clear all localStorage
+                localStorage.clear();
+                sessionStorage.clear();
+                
+                console.log('✅ All data cleared!');
+                
+                // Reset form fields to empty
+                document.getElementById('preferredEventType').value = '';
+                document.getElementById('notificationFrequency').value = 'weekly';
+                document.getElementById('priceRange').value = '';
+                document.getElementById('preferEmailUpdates').checked = true;
+                document.getElementById('preferSMSUpdates').checked = false;
+                document.getElementById('preferOnSiteNotifications').checked = true;
+                
+                // Hide success message
+                document.getElementById('savedPreferencesDisplay').style.display = 'none';
+                
+                // Show clear message
+                document.getElementById('preferenceStatus').innerHTML = '<div style="background: #f8d7da; color: #721c24; padding: 1rem; border-radius: 4px; border-left: 4px solid #f5c6cb; margin-top: 1rem;"><strong>🗑️ All Data Cleared!</strong><br>All your preferences have been deleted.</div>';
+                
+                alert('✅ All data cleared successfully!');
+            }
+        }
+
+        // ==================== Exercise 9: Geolocation Function ====================
+        
+        function findNearbyEvents() {
+            console.log('Finding nearby events...');
+            
+            const locationStatus = document.getElementById('locationStatus');
+            locationStatus.style.display = 'block';
+            locationStatus.innerHTML = '📍 Locating your position...';
+
+            if (navigator.geolocation) {
+                const options = {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                };
+
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const coords = position.coords;
+                        console.log('Location found:', coords);
+                        
+                        const html = `
+                            <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #2196F3;">
+                                <h3 style="color: #1976d2; margin-top: 0;">✅ Your Location Found!</h3>
+                                <div style="background: white; padding: 1rem; border-radius: 6px; margin: 1rem 0;">
+                                    <p><strong>📍 Latitude:</strong> ${coords.latitude.toFixed(6)}</p>
+                                    <p><strong>📍 Longitude:</strong> ${coords.longitude.toFixed(6)}</p>
+                                    <p><strong>📏 Accuracy:</strong> ±${coords.accuracy.toFixed(0)} meters</p>
+                                    <p><strong>⛰️ Altitude:</strong> ${coords.altitude ? coords.altitude.toFixed(0) + ' meters' : 'Not available'}</p>
+                                </div>
+                                <p style="color: #555; margin: 0;"><em>🎉 Events near you are being displayed! Check out our Event page for more details.</em></p>
+                            </div>
+                        `;
+                        locationStatus.innerHTML = html;
+                        alert('✅ Location found! Showing events near you.');
+                    },
+                    function(error) {
+                        let errorMsg = '';
+                        console.error('Geolocation error:', error);
+                        
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                errorMsg = '❌ Permission denied. Please enable location access in your browser settings.';
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                errorMsg = '❌ Location information is unavailable.';
+                                break;
+                            case error.TIMEOUT:
+                                errorMsg = '❌ The request to get your location timed out.';
+                                break;
+                            default:
+                                errorMsg = '❌ An unknown error occurred.';
+                        }
+                        locationStatus.innerHTML = `<div style="background: #ffebee; padding: 1rem; border-radius: 8px; border-left: 4px solid #f44336; color: #c62828;"><strong>Error:</strong> ${errorMsg}</div>`;
+                        alert(errorMsg);
+                    },
+                    options
+                );
+            } else {
+                const msg = '❌ Geolocation is not supported by your browser.';
+                locationStatus.innerHTML = `<div style="background: #ffebee; padding: 1rem; border-radius: 8px; border-left: 4px solid #f44336; color: #c62828;"><strong>Error:</strong> ${msg}</div>`;
+                alert(msg);
+            }
+        }
+        // ==================== Exercise 10: Chrome DevTools Support ====================
+
+        // Breakpoint hint for Chrome DevTools
+        console.log('====================================');
+        console.log('Chrome DevTools Tips:');
+        console.log('1. Press F12 to open DevTools');
+        console.log('2. Go to Sources tab and set breakpoints');
+        console.log('3. Try clicking "Find Nearby Events" to trigger breakpoints');
+        console.log('4. Use Console to test: localStorage, geolocation, etc.');
+        console.log('5. Inspect elements to see live CSS modifications');
+        console.log('====================================');
+
+        // Warn before unfinished form
+        window.addEventListener('beforeunload', function(e) {
+            const formData = document.getElementById('registrationForm');
+            const hasData = document.getElementById('fullName').value || 
+                           document.getElementById('email').value ||
+                           document.getElementById('message').value;
+            
+            if (hasData && !document.getElementById('confirmationOutput').textContent.includes('Successful')) {
+                e.preventDefault();
+                e.returnValue = '';
+                console.warn('User attempted to leave with unsaved form data');
+            }
+        });
+
+        console.log('All exercises loaded and ready for Chrome DevTools debugging!');
+    </script>
+    
+    <!-- EXERCISE 1: External JavaScript File -->
+    <script src="main.js"></script>
+    
+    <!-- EXERCISE 1.1 & 2.2: Bootstrap 5 JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

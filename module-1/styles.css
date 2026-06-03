@@ -1,0 +1,1217 @@
+/* ================================================
+   LOCAL COMMUNITY EVENT PORTAL - STYLESHEET
+   CSS3 EXERCISES & MODERN STYLING
+   ================================================ */
+
+/* ================================================
+   EXERCISE 1: CSS RESET & UNIVERSAL SELECTOR
+   ================================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ================================================
+   EXERCISE 2: TYPOGRAPHY & GOOGLE FONTS
+   ================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+/* Main body typography */
+body {
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+/* Heading styles with Poppins font */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+h2 {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    border-bottom: 3px solid #3498db;
+    padding-bottom: 0.5rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+p {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+    letter-spacing: 0.3px;
+}
+
+/* ================================================
+   EXERCISE 3: SELECTORS - ID, CLASS, ELEMENT
+   ================================================ */
+
+/* Element selector - all sections */
+section {
+    margin: 3rem 0;
+    padding: 2rem;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+/* ID selector for main elements */
+#welcomeBanner {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+    padding: 3rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+#welcomeBanner h1 {
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Class selectors */
+.page-section {
+    display: none;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.page-section.active {
+    display: block;
+}
+
+.event-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.event-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+    font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    background-color: #f0f8ff;
+}
+
+/* Grouping selector - style multiple elements */
+.highlight,
+.special-offer {
+    background-color: #f39c12;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-weight: bold;
+    color: white;
+}
+
+/* ================================================
+   EXERCISE 4: NAVIGATION & LINK STYLING
+   ================================================ */
+
+/* Navigation bar */
+nav {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+/* Link pseudo-classes */
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    position: relative;
+}
+
+nav a:link {
+    color: #ecf0f1;
+}
+
+nav a:visited {
+    color: #bdc3c7;
+}
+
+nav a:hover {
+    color: #3498db;
+    background-color: rgba(52, 152, 219, 0.1);
+    transform: translateY(-2px);
+}
+
+nav a:active {
+    color: #2980b9;
+    transform: translateY(0);
+}
+
+/* ================================================
+   EXERCISE 5: LIST STYLING
+   ================================================ */
+
+/* Remove default list bullets from nav */
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+}
+
+nav li {
+    margin: 0;
+    padding: 0;
+}
+
+/* Feature lists */
+.feature-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.feature-list li {
+    padding-left: 2rem;
+    margin-bottom: 1rem;
+    position: relative;
+    line-height: 1.8;
+}
+
+.feature-list li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #27ae60;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* ================================================
+   EXERCISE 6: TABLE STYLING
+   ================================================ */
+
+/* Table container */
+#gallery {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#gallery th {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: white;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+#gallery td {
+    padding: 1rem;
+    border-bottom: 1px solid #ecf0f1;
+    text-align: left;
+}
+
+/* Zebra striping - Exercise 6 */
+#gallery tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+#gallery tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+#gallery tbody tr:hover {
+    background-color: #e8f4f8;
+    transition: background-color 0.3s ease;
+}
+
+/* ================================================
+   EXERCISE 7: BOX MODEL & LAYOUT
+   ================================================ */
+
+/* Main container */
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Section spacing */
+section {
+    margin: 3rem 0;
+    padding: 2rem;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    border: 1px solid #ecf0f1;
+}
+
+/* Box model demonstration */
+.box-demo {
+    padding: 2rem;
+    margin: 1rem;
+    border: 3px solid #3498db;
+    outline: 2px dashed #e74c3c;
+    outline-offset: 2px;
+    background-color: #ecf8ff;
+}
+
+/* ================================================
+   EXERCISE 8: BUTTON STYLING
+   ================================================ */
+
+button {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+}
+
+button[type="submit"],
+button[type="button"] {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3);
+}
+
+/* ================================================
+   EXERCISE 9: EVENT CARD GRID & FLEXBOX
+   ================================================ */
+
+/* Event grid layout */
+.event-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Flex layout for buttons */
+.button-group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Filter button styling */
+.event-filter-btn {
+    padding: 0.7rem 1.5rem;
+    border: 2px solid #ddd;
+    background: white;
+    color: #555;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.event-filter-btn:hover {
+    border-color: #667eea;
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* ================================================
+   EXERCISE 10: MULTI-COLUMN LAYOUT (CSS3)
+   ================================================ */
+
+.news-section {
+    column-count: 2;
+    column-gap: 30px;
+    column-rule: 2px solid #3498db;
+    text-align: justify;
+    margin: 2rem 0;
+}
+
+.news-section h3 {
+    column-span: all;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .news-section {
+        column-count: 1;
+        column-rule: none;
+    }
+}
+
+/* ================================================
+   EXERCISE 11: ANIMATION & TRANSITIONS
+   ================================================ */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Smooth page transitions */
+.page-section.active {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* ================================================
+   EXERCISE 12: COLOR & GRADIENTS
+   ================================================ */
+
+/* Color utilities */
+.text-primary { color: #3498db; }
+.text-success { color: #27ae60; }
+.text-warning { color: #f39c12; }
+.text-danger { color: #e74c3c; }
+
+.bg-primary { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); }
+.bg-success { background: linear-gradient(135deg, #27ae60 0%, #229954 100%); }
+.bg-warning { background: linear-gradient(135deg, #f39c12 0%, #d68910 100%); }
+.bg-danger { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); }
+
+/* ================================================
+   EXERCISE 13: RESPONSIVE DESIGN WITH MEDIA QUERIES
+   ================================================ */
+
+/* Tablet devices (768px and below) */
+@media (max-width: 768px) {
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+    
+    nav {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+    }
+    
+    nav a {
+        display: block;
+        padding: 0.75rem;
+        width: 100%;
+        text-align: center;
+    }
+    
+    main {
+        padding: 0 1rem;
+    }
+    
+    section {
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+    }
+    
+    .event-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .button-group {
+        flex-direction: column;
+    }
+    
+    button {
+        width: 100%;
+    }
+    
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 0.65rem;
+        font-size: 16px; /* Prevents zoom on mobile */
+    }
+    
+    #welcomeBanner {
+        padding: 2rem 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    #welcomeBanner h1 {
+        font-size: 1.75rem;
+    }
+}
+
+/* Small mobile devices (480px and below) */
+@media (max-width: 480px) {
+    body {
+        font-size: 14px;
+    }
+    
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.2rem; }
+    h3 { font-size: 1rem; }
+    
+    nav {
+        gap: 0;
+        padding: 0.5rem;
+    }
+    
+    nav a {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+    
+    main {
+        padding: 0 0.5rem;
+    }
+    
+    section {
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    
+    .event-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    #welcomeBanner {
+        padding: 1.5rem 1rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    #welcomeBanner h1 {
+        font-size: 1.25rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+    
+    .feature-list li {
+        padding-left: 1.5rem;
+        margin-bottom: 0.75rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Large desktop devices (1200px and above) */
+@media (min-width: 1200px) {
+    main {
+        max-width: 1400px;
+    }
+    
+    .event-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    }
+}
+
+/* ================================================
+   EXERCISE 14: ACCESSIBILITY & FOCUS STATES
+   ================================================ */
+
+/* Focus visible for better accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid #3498db;
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: more) {
+    body {
+        color: #000;
+        background: #fff;
+    }
+    
+    nav {
+        border-bottom: 3px solid #000;
+    }
+    
+    button {
+        border: 2px solid #000;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ================================================
+   EXERCISE 15: UTILITY CLASSES
+   ================================================ */
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+
+.p-1 { padding: 0.5rem; }
+.p-2 { padding: 1rem; }
+.p-3 { padding: 1.5rem; }
+
+.rounded { border-radius: 6px; }
+.rounded-lg { border-radius: 12px; }
+
+.shadow { box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
+.shadow-lg { box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); }
+
+/* ================================================
+   FOOTER STYLING
+   ================================================ */
+
+footer {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: white;
+    text-align: center;
+    padding: 2rem;
+    margin-top: 3rem;
+    border-top: 3px solid #3498db;
+}
+
+footer p {
+    margin: 0.5rem 0;
+    font-size: 0.95rem;
+    opacity: 0.9;
+}
+
+/* ================================================
+   OVERLAY & MODAL STYLES
+   ================================================ */
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 999;
+}
+
+.overlay.active {
+    display: block;
+}
+
+.enlarged-image {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 90vw;
+    max-height: 90vh;
+    z-index: 1000;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* ================================================
+   ERROR MESSAGE & FEEDBACK STYLING
+   ================================================ */
+
+.error-message {
+    color: #c0392b;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    font-weight: 500;
+}
+
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+    border-left: 4px solid #28a745;
+}
+
+.warning-message {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+    border-left: 4px solid #ffc107;
+}
+
+.char-count {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    margin-top: 0.5rem;
+}
+
+/* ================================================
+   RESPONSIVE VIDEO/IFRAME
+   ================================================ */
+
+.video-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 8px;
+}
+
+/* ================================================
+   BOOTSTRAP 5 + CUSTOM CSS ENHANCEMENTS
+   All 19 Bootstrap Exercises with CSS3 Styling
+   ================================================ */
+
+/* EXERCISE 3 & 4: Enhanced Grid System */
+.row {
+    margin-bottom: 1.5rem;
+}
+
+.col-12, .col-md-6, .col-lg-4 {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* EXERCISE 5 & 6: Flexbox Enhancement */
+.d-flex {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* EXERCISE 7: Typography Enhancement */
+.display-3, .display-4, .display-5 {
+    font-family: 'Poppins', sans-serif;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    letter-spacing: -1px;
+}
+
+.lead {
+    line-height: 1.8;
+    color: #555;
+    opacity: 0.95;
+}
+
+/* EXERCISE 8: Form Enhancement */
+.form-control, .form-select {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.form-label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.6rem;
+}
+
+.form-control-lg {
+    height: auto;
+    padding: 0.9rem 1.1rem;
+    font-size: 1.05rem;
+}
+
+.form-select-lg {
+    height: auto;
+    padding: 0.9rem 1.1rem;
+    font-size: 1.05rem;
+}
+
+/* EXERCISE 9: Button Enhancement */
+.btn {
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+    border: none;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #5c636a 100%);
+    border: none;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #198754 0%, #157347 100%);
+    border: none;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #bd2130 100%);
+    border: none;
+}
+
+.btn-outline-secondary {
+    border-color: #6c757d;
+    color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-lg {
+    padding: 1rem 2rem;
+    font-size: 1.05rem;
+    border-radius: 10px;
+}
+
+.btn-gradient {
+    background-size: 200% 200%;
+    background-position: 0% 50%;
+    animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* EXERCISE 10: Navbar Enhancement */
+.navbar {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.nav-link {
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 3px;
+    bottom: -5px;
+    left: 0;
+    background: white;
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* EXERCISE 11: Card Enhancement */
+.card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.card-img-top {
+    height: 220px;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.card:hover .card-img-top {
+    transform: scale(1.08);
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.75rem;
+}
+
+.card-text {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* EXERCISE 12: Spacing Enhancement */
+.mb-3, .mb-4, .mb-5 {
+    margin-bottom: 1.5rem !important;
+}
+
+.mt-2, .mt-3, .mt-4 {
+    margin-top: 1rem !important;
+}
+
+.p-3, .px-3, .py-3 {
+    padding: 1rem !important;
+}
+
+.g-3 {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 1.5rem;
+}
+
+/* EXERCISE 13: Colors & Backgrounds */
+.bg-primary {
+    background-color: #0d6efd !important;
+}
+
+.bg-success {
+    background-color: #198754 !important;
+}
+
+.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.bg-warning {
+    background-color: #ffc107 !important;
+}
+
+.bg-info {
+    background-color: #0dcaf0 !important;
+}
+
+.bg-light {
+    background-color: #f8f9fa !important;
+}
+
+.bg-dark {
+    background-color: #212529 !important;
+}
+
+.text-primary {
+    color: #0d6efd !important;
+}
+
+.text-success {
+    color: #198754 !important;
+}
+
+.text-danger {
+    color: #dc3545 !important;
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
+
+.text-white {
+    color: white !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+/* EXERCISE 14: Display & Visibility */
+@media (max-width: 767px) {
+    .d-md-none {
+        display: none !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .d-md-block {
+        display: block !important;
+    }
+}
+
+/* EXERCISE 15: Borders & Shadows */
+.border {
+    border: 1px solid #dee2e6 !important;
+}
+
+.border-start {
+    border-left: 3px solid currentColor !important;
+}
+
+.border-4 {
+    border-width: 4px !important;
+}
+
+.rounded {
+    border-radius: 8px !important;
+}
+
+.rounded-2 {
+    border-radius: 10px !important;
+}
+
+.rounded-3 {
+    border-radius: 12px !important;
+}
+
+.rounded-pill {
+    border-radius: 50px !important;
+}
+
+.rounded-circle {
+    border-radius: 50% !important;
+}
+
+.shadow {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.shadow-sm {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+
+.shadow-lg {
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+}
+
+/* EXERCISE 16: Positioning */
+.position-relative {
+    position: relative !important;
+}
+
+.position-absolute {
+    position: absolute !important;
+}
+
+.position-fixed {
+    position: fixed !important;
+}
+
+.top-0 {
+    top: 0 !important;
+}
+
+.bottom-0 {
+    bottom: 0 !important;
+}
+
+.start-0 {
+    left: 0 !important;
+}
+
+.end-0 {
+    right: 0 !important;
+}
+
+.translate-middle {
+    transform: translate(-50%, -50%) !important;
+}
+
+/* EXERCISE 17: Bootstrap Icons Integration */
+.bi {
+    vertical-align: -0.125em;
+    fill: currentColor;
+}
+
+.bi-sm {
+    font-size: 0.875rem;
+}
+
+.bi-lg {
+    font-size: 1.25rem;
+}
+
+/* EXERCISE 18: Alert Styling */
+.alert {
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.alert-info {
+    background-color: #cfe2ff;
+    border-color: #b6d4fe;
+    color: #084298;
+}
+
+.alert-success {
+    background-color: #d1e7dd;
+    border-color: #badbcc;
+    color: #0f5132;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffecb5;
+    color: #664d03;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c2c7;
+    color: #842029;
+}
+
+/* EXERCISE 19: Additional Enhancements */
+.form-check-input {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    box-shadow: inset 0 3px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-check-label {
+    cursor: pointer;
+    user-select: none;
+    margin-bottom: 0;
+}
+
+/* Container Enhancements */
+.container {
+    padding: 0 1.5rem;
+}
+
+/* Print Styles */
+@media print {
+    nav, footer {
+        display: none;
+    }
+    
+    body {
+        background: white;
+    }
+    
+    section {
+        page-break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}
