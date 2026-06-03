@@ -1,0 +1,1662 @@
+Enter password: *************
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 23
+Server version: 8.0.46 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2026, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> CREATE DATABASE event_management;
+Query OK, 1 row affected (0.09 sec)
+
+mysql> USE event_management;
+Database changed
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| event_management   |
+| event_portal       |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+6 rows in set (0.02 sec)
+
+mysql> SELECT DATABASE();
++------------------+
+| DATABASE()       |
++------------------+
+| event_management |
++------------------+
+1 row in set (0.00 sec)
+
+mysql> CREATE TABLE Users (
+    ->     user_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     full_name VARCHAR(100) NOT NULL,
+    ->     email VARCHAR(100) UNIQUE NOT NULL,
+    ->     city VARCHAR(100) NOT NULL,
+    ->     registration_date DATE NOT NULL
+    -> );
+Query OK, 0 rows affected (0.12 sec)
+
+mysql> SHOW TABLES;
++----------------------------+
+| Tables_in_event_management |
++----------------------------+
+| users                      |
++----------------------------+
+1 row in set (0.01 sec)
+
+mysql> DESC Users;
++-------------------+--------------+------+-----+---------+----------------+
+| Field             | Type         | Null | Key | Default | Extra          |
++-------------------+--------------+------+-----+---------+----------------+
+| user_id           | int          | NO   | PRI | NULL    | auto_increment |
+| full_name         | varchar(100) | NO   |     | NULL    |                |
+| email             | varchar(100) | NO   | UNI | NULL    |                |
+| city              | varchar(100) | NO   |     | NULL    |                |
+| registration_date | date         | NO   |     | NULL    |                |
++-------------------+--------------+------+-----+---------+----------------+
+5 rows in set (0.03 sec)
+
+mysql> CREATE TABLE Events (
+    ->     event_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     title VARCHAR(200) NOT NULL,
+    ->     description TEXT,
+    ->     city VARCHAR(100) NOT NULL,
+    ->     start_date DATETIME NOT NULL,
+    ->     end_date DATETIME NOT NULL,
+    ->     status ENUM('upcoming', 'completed', 'cancelled'),
+    ->     organizer_id INT,
+    ->     FOREIGN KEY (organizer_id) REFERENCES Users(user_id)
+    -> );
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> SHOW TABLES;
++----------------------------+
+| Tables_in_event_management |
++----------------------------+
+| events                     |
+| users                      |
++----------------------------+
+2 rows in set (0.00 sec)
+
+mysql> DESC Events;
++--------------+------------------------------------------+------+-----+---------+----------------+
+| Field        | Type                                     | Null | Key | Default | Extra          |
++--------------+------------------------------------------+------+-----+---------+----------------+
+| event_id     | int                                      | NO   | PRI | NULL    | auto_increment |
+| title        | varchar(200)                             | NO   |     | NULL    |                |
+| description  | text                                     | YES  |     | NULL    |                |
+| city         | varchar(100)                             | NO   |     | NULL    |                |
+| start_date   | datetime                                 | NO   |     | NULL    |                |
+| end_date     | datetime                                 | NO   |     | NULL    |                |
+| status       | enum('upcoming','completed','cancelled') | YES  |     | NULL    |                |
+| organizer_id | int                                      | YES  | MUL | NULL    |                |
++--------------+------------------------------------------+------+-----+---------+----------------+
+8 rows in set (0.00 sec)
+
+mysql> CREATE TABLE Sessions (
+    ->     session_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     event_id INT,
+    ->     title VARCHAR(200) NOT NULL,
+    ->     speaker_name VARCHAR(100) NOT NULL,
+    ->     start_time DATETIME NOT NULL,
+    ->     end_time DATETIME NOT NULL,
+    ->     FOREIGN KEY (event_id) REFERENCES Events(event_id)
+    -> );
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> DESC Sessions;
++--------------+--------------+------+-----+---------+----------------+
+| Field        | Type         | Null | Key | Default | Extra          |
++--------------+--------------+------+-----+---------+----------------+
+| session_id   | int          | NO   | PRI | NULL    | auto_increment |
+| event_id     | int          | YES  | MUL | NULL    |                |
+| title        | varchar(200) | NO   |     | NULL    |                |
+| speaker_name | varchar(100) | NO   |     | NULL    |                |
+| start_time   | datetime     | NO   |     | NULL    |                |
+| end_time     | datetime     | NO   |     | NULL    |                |
++--------------+--------------+------+-----+---------+----------------+
+6 rows in set (0.00 sec)
+
+mysql> CREATE TABLE Registrations (
+    ->     registration_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     user_id INT,
+    ->     event_id INT,
+    ->     registration_date DATE NOT NULL,
+    ->     FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    ->     FOREIGN KEY (event_id) REFERENCES Events(event_id)
+    -> );
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> DESC Registrations;
++-------------------+------+------+-----+---------+----------------+
+| Field             | Type | Null | Key | Default | Extra          |
++-------------------+------+------+-----+---------+----------------+
+| registration_id   | int  | NO   | PRI | NULL    | auto_increment |
+| user_id           | int  | YES  | MUL | NULL    |                |
+| event_id          | int  | YES  | MUL | NULL    |                |
+| registration_date | date | NO   |     | NULL    |                |
++-------------------+------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> CREATE TABLE Feedback (
+    ->     feedback_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     user_id INT,
+    ->     event_id INT,
+    ->     rating INT CHECK (rating BETWEEN 1 AND 5),
+    ->     comments TEXT,
+    ->     feedback_date DATE NOT NULL,
+    ->     FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    ->     FOREIGN KEY (event_id) REFERENCES Events(event_id)
+    -> );
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> DESC Feedback;
++---------------+------+------+-----+---------+----------------+
+| Field         | Type | Null | Key | Default | Extra          |
++---------------+------+------+-----+---------+----------------+
+| feedback_id   | int  | NO   | PRI | NULL    | auto_increment |
+| user_id       | int  | YES  | MUL | NULL    |                |
+| event_id      | int  | YES  | MUL | NULL    |                |
+| rating        | int  | YES  |     | NULL    |                |
+| comments      | text | YES  |     | NULL    |                |
+| feedback_date | date | NO   |     | NULL    |                |
++---------------+------+------+-----+---------+----------------+
+6 rows in set (0.00 sec)
+
+mysql> CREATE TABLE Resources (
+    ->     resource_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     event_id INT,
+    ->     resource_type ENUM('pdf', 'image', 'link'),
+    ->     resource_url VARCHAR(255) NOT NULL,
+    ->     uploaded_at DATETIME NOT NULL,
+    ->     FOREIGN KEY (event_id) REFERENCES Events(event_id)
+    -> );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> DESC Resources;
++---------------+----------------------------+------+-----+---------+----------------+
+| Field         | Type                       | Null | Key | Default | Extra          |
++---------------+----------------------------+------+-----+---------+----------------+
+| resource_id   | int                        | NO   | PRI | NULL    | auto_increment |
+| event_id      | int                        | YES  | MUL | NULL    |                |
+| resource_type | enum('pdf','image','link') | YES  |     | NULL    |                |
+| resource_url  | varchar(255)               | NO   |     | NULL    |                |
+| uploaded_at   | datetime                   | NO   |     | NULL    |                |
++---------------+----------------------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO Users (user_id, full_name, email, city, registration_date)
+    -> VALUES
+    -> (1, 'Alice Johnson', 'alice@example.com', 'New York', '2024-12-01'),
+    -> (2, 'Bob Smith', 'bob@example.com', 'Los Angeles', '2024-12-05'),
+    -> (3, 'Charlie Lee', 'charlie@example.com', 'Chicago', '2024-12-10'),
+    -> (4, 'Diana King', 'diana@example.com', 'New York', '2025-01-15'),
+    -> (5, 'Ethan Hunt', 'ethan@example.com', 'Los Angeles', '2025-02-01');
+Query OK, 5 rows affected (0.04 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM Users;
++---------+---------------+---------------------+-------------+-------------------+
+| user_id | full_name     | email               | city        | registration_date |
++---------+---------------+---------------------+-------------+-------------------+
+|       1 | Alice Johnson | alice@example.com   | New York    | 2024-12-01        |
+|       2 | Bob Smith     | bob@example.com     | Los Angeles | 2024-12-05        |
+|       3 | Charlie Lee   | charlie@example.com | Chicago     | 2024-12-10        |
+|       4 | Diana King    | diana@example.com   | New York    | 2025-01-15        |
+|       5 | Ethan Hunt    | ethan@example.com   | Los Angeles | 2025-02-01        |
++---------+---------------+---------------------+-------------+-------------------+
+5 rows in set (0.03 sec)
+
+mysql> INSERT INTO Events
+    -> (event_id, title, description, city, start_date, end_date, status, organizer_id)
+    -> VALUES
+    -> (1,
+    ->  'Tech Innovators Meetup',
+    ->  'A meetup for tech enthusiasts.',
+    ->  'New York',
+    ->  '2025-06-10 10:00:00',
+    ->  '2025-06-10 16:00:00',
+    ->  'upcoming',
+    ->  1),
+    ->
+    -> (2,
+    ->  'AI & ML Conference',
+    ->  'Conference on AI and ML advancements.',
+    ->  'Chicago',
+    ->  '2025-05-15 09:00:00',
+    ->  '2025-05-15 17:00:00',
+    ->  'completed',
+    ->  3),
+    ->
+    -> (3,
+    ->  'Frontend Development Bootcamp',
+    ->  'Hands-on training on frontend tech.',
+    ->  'Los Angeles',
+    ->  '2025-07-01 10:00:00',
+    ->  '2025-07-03 16:00:00',
+    ->  'upcoming',
+    ->  2);
+Query OK, 3 rows affected (0.04 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM Events;
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+| event_id | title                         | description                           | city        | start_date          | end_date            | status    | organizer_id |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+|        1 | Tech Innovators Meetup        | A meetup for tech enthusiasts.        | New York    | 2025-06-10 10:00:00 | 2025-06-10 16:00:00 | upcoming  |            1 |
+|        2 | AI & ML Conference            | Conference on AI and ML advancements. | Chicago     | 2025-05-15 09:00:00 | 2025-05-15 17:00:00 | completed |            3 |
+|        3 | Frontend Development Bootcamp | Hands-on training on frontend tech.   | Los Angeles | 2025-07-01 10:00:00 | 2025-07-03 16:00:00 | upcoming  |            2 |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO Sessions
+    -> (session_id, event_id, title, speaker_name, start_time, end_time)
+    -> VALUES
+    -> (1, 1, 'Opening Keynote', 'Dr. Tech',
+    ->  '2025-06-10 10:00:00',
+    ->  '2025-06-10 11:00:00'),
+    ->
+    -> (2, 1, 'Future of Web Dev', 'Alice Johnson',
+    ->  '2025-06-10 11:15:00',
+    ->  '2025-06-10 12:30:00'),
+    ->
+    -> (3, 2, 'AI in Healthcare', 'Charlie Lee',
+    ->  '2025-05-15 09:30:00',
+    ->  '2025-05-15 11:00:00'),
+    ->
+    -> (4, 3, 'Intro to HTML5', 'Bob Smith',
+    ->  '2025-07-01 10:00:00',
+    ->  '2025-07-01 12:00:00');
+Query OK, 4 rows affected (0.04 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM Sessions;
++------------+----------+-------------------+---------------+---------------------+---------------------+
+| session_id | event_id | title             | speaker_name  | start_time          | end_time            |
++------------+----------+-------------------+---------------+---------------------+---------------------+
+|          1 |        1 | Opening Keynote   | Dr. Tech      | 2025-06-10 10:00:00 | 2025-06-10 11:00:00 |
+|          2 |        1 | Future of Web Dev | Alice Johnson | 2025-06-10 11:15:00 | 2025-06-10 12:30:00 |
+|          3 |        2 | AI in Healthcare  | Charlie Lee   | 2025-05-15 09:30:00 | 2025-05-15 11:00:00 |
+|          4 |        3 | Intro to HTML5    | Bob Smith     | 2025-07-01 10:00:00 | 2025-07-01 12:00:00 |
++------------+----------+-------------------+---------------+---------------------+---------------------+
+4 rows in set (0.00 sec)
+
+mysql> INSERT INTO Registrations
+    -> (registration_id, user_id, event_id, registration_date)
+    -> VALUES
+    -> (1, 1, 1, '2025-05-01'),
+    -> (2, 2, 1, '2025-05-02'),
+    -> (3, 3, 2, '2025-04-30'),
+    -> (4, 4, 2, '2025-04-28'),
+    -> (5, 5, 3, '2025-06-15');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM Registrations;
++-----------------+---------+----------+-------------------+
+| registration_id | user_id | event_id | registration_date |
++-----------------+---------+----------+-------------------+
+|               1 |       1 |        1 | 2025-05-01        |
+|               2 |       2 |        1 | 2025-05-02        |
+|               3 |       3 |        2 | 2025-04-30        |
+|               4 |       4 |        2 | 2025-04-28        |
+|               5 |       5 |        3 | 2025-06-15        |
++-----------------+---------+----------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO Feedback
+    -> (feedback_id, user_id, event_id, rating, comments, feedback_date)
+    -> VALUES
+    -> (1, 3, 2, 4, 'Great insights!', '2025-05-16'),
+    -> (2, 4, 2, 5, 'Very informative.', '2025-05-16'),
+    -> (3, 2, 1, 3, 'Could be better.', '2025-06-11');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM Feedback;
++-------------+---------+----------+--------+-------------------+---------------+
+| feedback_id | user_id | event_id | rating | comments          | feedback_date |
++-------------+---------+----------+--------+-------------------+---------------+
+|           1 |       3 |        2 |      4 | Great insights!   | 2025-05-16    |
+|           2 |       4 |        2 |      5 | Very informative. | 2025-05-16    |
+|           3 |       2 |        1 |      3 | Could be better.  | 2025-06-11    |
++-------------+---------+----------+--------+-------------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO Resources
+    -> (resource_id, event_id, resource_type, resource_url, uploaded_at)
+    -> VALUES
+    -> (1, 1, 'pdf', 'https://portal.com/resources/tech_meetup_agenda.pdf', '2025-05-01 10:00:00'),
+    -> (2, 2, 'image', 'https://portal.com/resources/ai_poster.jpg', '2025-04-20 09:00:00'),
+    -> (3, 3, 'link', 'https://portal.com/resources/html5_docs', '2025-06-25 15:00:00');
+Query OK, 3 rows affected (0.03 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM Resources;
++-------------+----------+---------------+-----------------------------------------------------+---------------------+
+| resource_id | event_id | resource_type | resource_url                                        | uploaded_at         |
++-------------+----------+---------------+-----------------------------------------------------+---------------------+
+|           1 |        1 | pdf           | https://portal.com/resources/tech_meetup_agenda.pdf | 2025-05-01 10:00:00 |
+|           2 |        2 | image         | https://portal.com/resources/ai_poster.jpg          | 2025-04-20 09:00:00 |
+|           3 |        3 | link          | https://portal.com/resources/html5_docs             | 2025-06-25 15:00:00 |
++-------------+----------+---------------+-----------------------------------------------------+---------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Users;
++---------+---------------+---------------------+-------------+-------------------+
+| user_id | full_name     | email               | city        | registration_date |
++---------+---------------+---------------------+-------------+-------------------+
+|       1 | Alice Johnson | alice@example.com   | New York    | 2024-12-01        |
+|       2 | Bob Smith     | bob@example.com     | Los Angeles | 2024-12-05        |
+|       3 | Charlie Lee   | charlie@example.com | Chicago     | 2024-12-10        |
+|       4 | Diana King    | diana@example.com   | New York    | 2025-01-15        |
+|       5 | Ethan Hunt    | ethan@example.com   | Los Angeles | 2025-02-01        |
++---------+---------------+---------------------+-------------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Registrations;
++-----------------+---------+----------+-------------------+
+| registration_id | user_id | event_id | registration_date |
++-----------------+---------+----------+-------------------+
+|               1 |       1 |        1 | 2025-05-01        |
+|               2 |       2 |        1 | 2025-05-02        |
+|               3 |       3 |        2 | 2025-04-30        |
+|               4 |       4 |        2 | 2025-04-28        |
+|               5 |       5 |        3 | 2025-06-15        |
++-----------------+---------+----------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Events;
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+| event_id | title                         | description                           | city        | start_date          | end_date            | status    | organizer_id |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+|        1 | Tech Innovators Meetup        | A meetup for tech enthusiasts.        | New York    | 2025-06-10 10:00:00 | 2025-06-10 16:00:00 | upcoming  |            1 |
+|        2 | AI & ML Conference            | Conference on AI and ML advancements. | Chicago     | 2025-05-15 09:00:00 | 2025-05-15 17:00:00 | completed |            3 |
+|        3 | Frontend Development Bootcamp | Hands-on training on frontend tech.   | Los Angeles | 2025-07-01 10:00:00 | 2025-07-03 16:00:00 | upcoming  |            2 |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT *
+    -> FROM Users u
+    -> JOIN Registrations r ON u.user_id = r.user_id
+    -> JOIN Events e ON r.event_id = e.event_id;
++---------+---------------+---------------------+-------------+-------------------+-----------------+---------+----------+-------------------+----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+| user_id | full_name     | email               | city        | registration_date | registration_id | user_id | event_id | registration_date | event_id | title                         | description                           | city        | start_date          | end_date            | status    | organizer_id |
++---------+---------------+---------------------+-------------+-------------------+-----------------+---------+----------+-------------------+----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+|       1 | Alice Johnson | alice@example.com   | New York    | 2024-12-01        |               1 |       1 |        1 | 2025-05-01        |        1 | Tech Innovators Meetup        | A meetup for tech enthusiasts.        | New York    | 2025-06-10 10:00:00 | 2025-06-10 16:00:00 | upcoming  |            1 |
+|       2 | Bob Smith     | bob@example.com     | Los Angeles | 2024-12-05        |               2 |       2 |        1 | 2025-05-02        |        1 | Tech Innovators Meetup        | A meetup for tech enthusiasts.        | New York    | 2025-06-10 10:00:00 | 2025-06-10 16:00:00 | upcoming  |            1 |
+|       3 | Charlie Lee   | charlie@example.com | Chicago     | 2024-12-10        |               3 |       3 |        2 | 2025-04-30        |        2 | AI & ML Conference            | Conference on AI and ML advancements. | Chicago     | 2025-05-15 09:00:00 | 2025-05-15 17:00:00 | completed |            3 |
+|       4 | Diana King    | diana@example.com   | New York    | 2025-01-15        |               4 |       4 |        2 | 2025-04-28        |        2 | AI & ML Conference            | Conference on AI and ML advancements. | Chicago     | 2025-05-15 09:00:00 | 2025-05-15 17:00:00 | completed |            3 |
+|       5 | Ethan Hunt    | ethan@example.com   | Los Angeles | 2025-02-01        |               5 |       5 |        3 | 2025-06-15        |        3 | Frontend Development Bootcamp | Hands-on training on frontend tech.   | Los Angeles | 2025-07-01 10:00:00 | 2025-07-03 16:00:00 | upcoming  |            2 |
++---------+---------------+---------------------+-------------+-------------------+-----------------+---------+----------+-------------------+----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+5 rows in set (0.02 sec)
+
+mysql> SELECT
+    ->     u.full_name,
+    ->     u.city AS user_city,
+    ->     e.title,
+    ->     e.city AS event_city,
+    ->     e.start_date,
+    ->     e.status
+    -> FROM Users u
+    -> JOIN Registrations r ON u.user_id = r.user_id
+    -> JOIN Events e ON r.event_id = e.event_id
+    -> WHERE e.status = 'upcoming'
+    ->   AND u.city = e.city
+    -> ORDER BY e.start_date;
++---------------+-------------+-------------------------------+-------------+---------------------+----------+
+| full_name     | user_city   | title                         | event_city  | start_date          | status   |
++---------------+-------------+-------------------------------+-------------+---------------------+----------+
+| Alice Johnson | New York    | Tech Innovators Meetup        | New York    | 2025-06-10 10:00:00 | upcoming |
+| Ethan Hunt    | Los Angeles | Frontend Development Bootcamp | Los Angeles | 2025-07-01 10:00:00 | upcoming |
++---------------+-------------+-------------------------------+-------------+---------------------+----------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Feedback;
++-------------+---------+----------+--------+-------------------+---------------+
+| feedback_id | user_id | event_id | rating | comments          | feedback_date |
++-------------+---------+----------+--------+-------------------+---------------+
+|           1 |       3 |        2 |      4 | Great insights!   | 2025-05-16    |
+|           2 |       4 |        2 |      5 | Very informative. | 2025-05-16    |
+|           3 |       2 |        1 |      3 | Could be better.  | 2025-06-11    |
++-------------+---------+----------+--------+-------------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Events;
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+| event_id | title                         | description                           | city        | start_date          | end_date            | status    | organizer_id |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+|        1 | Tech Innovators Meetup        | A meetup for tech enthusiasts.        | New York    | 2025-06-10 10:00:00 | 2025-06-10 16:00:00 | upcoming  |            1 |
+|        2 | AI & ML Conference            | Conference on AI and ML advancements. | Chicago     | 2025-05-15 09:00:00 | 2025-05-15 17:00:00 | completed |            3 |
+|        3 | Frontend Development Bootcamp | Hands-on training on frontend tech.   | Los Angeles | 2025-07-01 10:00:00 | 2025-07-03 16:00:00 | upcoming  |            2 |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     event_id,
+    ->     COUNT(*) AS total_feedback,
+    ->     AVG(rating) AS avg_rating
+    -> FROM Feedback
+    -> GROUP BY event_id;
++----------+----------------+------------+
+| event_id | total_feedback | avg_rating |
++----------+----------------+------------+
+|        1 |              1 |     3.0000 |
+|        2 |              2 |     4.5000 |
++----------+----------------+------------+
+2 rows in set (0.03 sec)
+
+mysql> SELECT
+    ->     event_id,
+    ->     COUNT(*) AS total_feedback,
+    ->     AVG(rating) AS avg_rating
+    -> FROM Feedback
+    -> GROUP BY event_id
+    -> HAVING COUNT(*) >= 10
+    -> ORDER BY avg_rating DESC;
+Empty set (0.00 sec)
+
+mysql> SELECT * FROM Users;
++---------+---------------+---------------------+-------------+-------------------+
+| user_id | full_name     | email               | city        | registration_date |
++---------+---------------+---------------------+-------------+-------------------+
+|       1 | Alice Johnson | alice@example.com   | New York    | 2024-12-01        |
+|       2 | Bob Smith     | bob@example.com     | Los Angeles | 2024-12-05        |
+|       3 | Charlie Lee   | charlie@example.com | Chicago     | 2024-12-10        |
+|       4 | Diana King    | diana@example.com   | New York    | 2025-01-15        |
+|       5 | Ethan Hunt    | ethan@example.com   | Los Angeles | 2025-02-01        |
++---------+---------------+---------------------+-------------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Registrations;
++-----------------+---------+----------+-------------------+
+| registration_id | user_id | event_id | registration_date |
++-----------------+---------+----------+-------------------+
+|               1 |       1 |        1 | 2025-05-01        |
+|               2 |       2 |        1 | 2025-05-02        |
+|               3 |       3 |        2 | 2025-04-30        |
+|               4 |       4 |        2 | 2025-04-28        |
+|               5 |       5 |        3 | 2025-06-15        |
++-----------------+---------+----------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     u.user_id,
+    ->     u.full_name,
+    ->     r.registration_date
+    -> FROM Users u
+    -> LEFT JOIN Registrations r
+    ->     ON u.user_id = r.user_id;
++---------+---------------+-------------------+
+| user_id | full_name     | registration_date |
++---------+---------------+-------------------+
+|       1 | Alice Johnson | 2025-05-01        |
+|       2 | Bob Smith     | 2025-05-02        |
+|       3 | Charlie Lee   | 2025-04-30        |
+|       4 | Diana King    | 2025-04-28        |
+|       5 | Ethan Hunt    | 2025-06-15        |
++---------+---------------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     u.user_id,
+    ->     u.full_name,
+    ->     u.city
+    -> FROM Users u
+    -> LEFT JOIN Registrations r
+    ->     ON u.user_id = r.user_id
+    -> GROUP BY u.user_id, u.full_name, u.city
+    -> HAVING
+    ->     MAX(r.registration_date) IS NULL
+    ->     OR MAX(r.registration_date) < DATE_SUB(CURDATE(), INTERVAL 90 DAY);
++---------+---------------+-------------+
+| user_id | full_name     | city        |
++---------+---------------+-------------+
+|       1 | Alice Johnson | New York    |
+|       2 | Bob Smith     | Los Angeles |
+|       3 | Charlie Lee   | Chicago     |
+|       4 | Diana King    | New York    |
+|       5 | Ethan Hunt    | Los Angeles |
++---------+---------------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Sessions;
++------------+----------+-------------------+---------------+---------------------+---------------------+
+| session_id | event_id | title             | speaker_name  | start_time          | end_time            |
++------------+----------+-------------------+---------------+---------------------+---------------------+
+|          1 |        1 | Opening Keynote   | Dr. Tech      | 2025-06-10 10:00:00 | 2025-06-10 11:00:00 |
+|          2 |        1 | Future of Web Dev | Alice Johnson | 2025-06-10 11:15:00 | 2025-06-10 12:30:00 |
+|          3 |        2 | AI in Healthcare  | Charlie Lee   | 2025-05-15 09:30:00 | 2025-05-15 11:00:00 |
+|          4 |        3 | Intro to HTML5    | Bob Smith     | 2025-07-01 10:00:00 | 2025-07-01 12:00:00 |
++------------+----------+-------------------+---------------+---------------------+---------------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     session_id,
+    ->     event_id,
+    ->     title,
+    ->     start_time
+    -> FROM Sessions
+    -> WHERE TIME(start_time) BETWEEN '10:00:00' AND '12:00:00';
++------------+----------+-------------------+---------------------+
+| session_id | event_id | title             | start_time          |
++------------+----------+-------------------+---------------------+
+|          1 |        1 | Opening Keynote   | 2025-06-10 10:00:00 |
+|          2 |        1 | Future of Web Dev | 2025-06-10 11:15:00 |
+|          4 |        3 | Intro to HTML5    | 2025-07-01 10:00:00 |
++------------+----------+-------------------+---------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     event_id,
+    ->     COUNT(*) AS peak_session_count
+    -> FROM Sessions
+    -> WHERE TIME(start_time) BETWEEN '10:00:00' AND '12:00:00'
+    -> GROUP BY event_id;
++----------+--------------------+
+| event_id | peak_session_count |
++----------+--------------------+
+|        1 |                  2 |
+|        3 |                  1 |
++----------+--------------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Users;
++---------+---------------+---------------------+-------------+-------------------+
+| user_id | full_name     | email               | city        | registration_date |
++---------+---------------+---------------------+-------------+-------------------+
+|       1 | Alice Johnson | alice@example.com   | New York    | 2024-12-01        |
+|       2 | Bob Smith     | bob@example.com     | Los Angeles | 2024-12-05        |
+|       3 | Charlie Lee   | charlie@example.com | Chicago     | 2024-12-10        |
+|       4 | Diana King    | diana@example.com   | New York    | 2025-01-15        |
+|       5 | Ethan Hunt    | ethan@example.com   | Los Angeles | 2025-02-01        |
++---------+---------------+---------------------+-------------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Registrations;
++-----------------+---------+----------+-------------------+
+| registration_id | user_id | event_id | registration_date |
++-----------------+---------+----------+-------------------+
+|               1 |       1 |        1 | 2025-05-01        |
+|               2 |       2 |        1 | 2025-05-02        |
+|               3 |       3 |        2 | 2025-04-30        |
+|               4 |       4 |        2 | 2025-04-28        |
+|               5 |       5 |        3 | 2025-06-15        |
++-----------------+---------+----------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     u.user_id,
+    ->     u.city,
+    ->     r.event_id
+    -> FROM Users u
+    -> JOIN Registrations r
+    ->     ON u.user_id = r.user_id;
++---------+-------------+----------+
+| user_id | city        | event_id |
++---------+-------------+----------+
+|       1 | New York    |        1 |
+|       2 | Los Angeles |        1 |
+|       3 | Chicago     |        2 |
+|       4 | New York    |        2 |
+|       5 | Los Angeles |        3 |
++---------+-------------+----------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     u.city,
+    ->     COUNT(DISTINCT u.user_id) AS total_users
+    -> FROM Users u
+    -> JOIN Registrations r
+    ->     ON u.user_id = r.user_id
+    -> GROUP BY u.city
+    -> ORDER BY total_users DESC
+    -> LIMIT 5;
++-------------+-------------+
+| city        | total_users |
++-------------+-------------+
+| Los Angeles |           2 |
+| New York    |           2 |
+| Chicago     |           1 |
++-------------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Resources;
++-------------+----------+---------------+-----------------------------------------------------+---------------------+
+| resource_id | event_id | resource_type | resource_url                                        | uploaded_at         |
++-------------+----------+---------------+-----------------------------------------------------+---------------------+
+|           1 |        1 | pdf           | https://portal.com/resources/tech_meetup_agenda.pdf | 2025-05-01 10:00:00 |
+|           2 |        2 | image         | https://portal.com/resources/ai_poster.jpg          | 2025-04-20 09:00:00 |
+|           3 |        3 | link          | https://portal.com/resources/html5_docs             | 2025-06-25 15:00:00 |
++-------------+----------+---------------+-----------------------------------------------------+---------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     event_id,
+    ->     SUM(CASE WHEN resource_type = 'pdf' THEN 1 ELSE 0 END) AS pdf_count,
+    ->     SUM(CASE WHEN resource_type = 'image' THEN 1 ELSE 0 END) AS image_count,
+    ->     SUM(CASE WHEN resource_type = 'link' THEN 1 ELSE 0 END) AS link_count
+    -> FROM Resources
+    -> GROUP BY event_id;
++----------+-----------+-------------+------------+
+| event_id | pdf_count | image_count | link_count |
++----------+-----------+-------------+------------+
+|        1 |         1 |           0 |          0 |
+|        2 |         0 |           1 |          0 |
+|        3 |         0 |           0 |          1 |
++----------+-----------+-------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     e.event_id,
+    ->     e.title,
+    ->     SUM(CASE WHEN r.resource_type = 'pdf' THEN 1 ELSE 0 END) AS pdf_count,
+    ->     SUM(CASE WHEN r.resource_type = 'image' THEN 1 ELSE 0 END) AS image_count,
+    ->     SUM(CASE WHEN r.resource_type = 'link' THEN 1 ELSE 0 END) AS link_count
+    -> FROM Events e
+    -> LEFT JOIN Resources r
+    ->     ON e.event_id = r.event_id
+    -> GROUP BY e.event_id, e.title;
++----------+-------------------------------+-----------+-------------+------------+
+| event_id | title                         | pdf_count | image_count | link_count |
++----------+-------------------------------+-----------+-------------+------------+
+|        1 | Tech Innovators Meetup        |         1 |           0 |          0 |
+|        2 | AI & ML Conference            |         0 |           1 |          0 |
+|        3 | Frontend Development Bootcamp |         0 |           0 |          1 |
++----------+-------------------------------+-----------+-------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Users;
++---------+---------------+---------------------+-------------+-------------------+
+| user_id | full_name     | email               | city        | registration_date |
++---------+---------------+---------------------+-------------+-------------------+
+|       1 | Alice Johnson | alice@example.com   | New York    | 2024-12-01        |
+|       2 | Bob Smith     | bob@example.com     | Los Angeles | 2024-12-05        |
+|       3 | Charlie Lee   | charlie@example.com | Chicago     | 2024-12-10        |
+|       4 | Diana King    | diana@example.com   | New York    | 2025-01-15        |
+|       5 | Ethan Hunt    | ethan@example.com   | Los Angeles | 2025-02-01        |
++---------+---------------+---------------------+-------------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Feedback;
++-------------+---------+----------+--------+-------------------+---------------+
+| feedback_id | user_id | event_id | rating | comments          | feedback_date |
++-------------+---------+----------+--------+-------------------+---------------+
+|           1 |       3 |        2 |      4 | Great insights!   | 2025-05-16    |
+|           2 |       4 |        2 |      5 | Very informative. | 2025-05-16    |
+|           3 |       2 |        1 |      3 | Could be better.  | 2025-06-11    |
++-------------+---------+----------+--------+-------------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Events;
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+| event_id | title                         | description                           | city        | start_date          | end_date            | status    | organizer_id |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+|        1 | Tech Innovators Meetup        | A meetup for tech enthusiasts.        | New York    | 2025-06-10 10:00:00 | 2025-06-10 16:00:00 | upcoming  |            1 |
+|        2 | AI & ML Conference            | Conference on AI and ML advancements. | Chicago     | 2025-05-15 09:00:00 | 2025-05-15 17:00:00 | completed |            3 |
+|        3 | Frontend Development Bootcamp | Hands-on training on frontend tech.   | Los Angeles | 2025-07-01 10:00:00 | 2025-07-03 16:00:00 | upcoming  |            2 |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     u.full_name,
+    ->     e.title AS event_name,
+    ->     f.rating,
+    ->     f.comments
+    -> FROM Feedback f
+    -> JOIN Users u ON f.user_id = u.user_id
+    -> JOIN Events e ON f.event_id = e.event_id;
++-------------+------------------------+--------+-------------------+
+| full_name   | event_name             | rating | comments          |
++-------------+------------------------+--------+-------------------+
+| Charlie Lee | AI & ML Conference     |      4 | Great insights!   |
+| Diana King  | AI & ML Conference     |      5 | Very informative. |
+| Bob Smith   | Tech Innovators Meetup |      3 | Could be better.  |
++-------------+------------------------+--------+-------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     u.full_name,
+    ->     e.title AS event_name,
+    ->     f.rating,
+    ->     f.comments,
+    ->     f.feedback_date
+    -> FROM Feedback f
+    -> JOIN Users u ON f.user_id = u.user_id
+    -> JOIN Events e ON f.event_id = e.event_id
+    -> WHERE f.rating < 3;
+Empty set (0.00 sec)
+
+mysql> SELECT * FROM Events;
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+| event_id | title                         | description                           | city        | start_date          | end_date            | status    | organizer_id |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+|        1 | Tech Innovators Meetup        | A meetup for tech enthusiasts.        | New York    | 2025-06-10 10:00:00 | 2025-06-10 16:00:00 | upcoming  |            1 |
+|        2 | AI & ML Conference            | Conference on AI and ML advancements. | Chicago     | 2025-05-15 09:00:00 | 2025-05-15 17:00:00 | completed |            3 |
+|        3 | Frontend Development Bootcamp | Hands-on training on frontend tech.   | Los Angeles | 2025-07-01 10:00:00 | 2025-07-03 16:00:00 | upcoming  |            2 |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Sessions;
++------------+----------+-------------------+---------------+---------------------+---------------------+
+| session_id | event_id | title             | speaker_name  | start_time          | end_time            |
++------------+----------+-------------------+---------------+---------------------+---------------------+
+|          1 |        1 | Opening Keynote   | Dr. Tech      | 2025-06-10 10:00:00 | 2025-06-10 11:00:00 |
+|          2 |        1 | Future of Web Dev | Alice Johnson | 2025-06-10 11:15:00 | 2025-06-10 12:30:00 |
+|          3 |        2 | AI in Healthcare  | Charlie Lee   | 2025-05-15 09:30:00 | 2025-05-15 11:00:00 |
+|          4 |        3 | Intro to HTML5    | Bob Smith     | 2025-07-01 10:00:00 | 2025-07-01 12:00:00 |
++------------+----------+-------------------+---------------+---------------------+---------------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     e.event_id,
+    ->     e.title,
+    ->     e.status,
+    ->     s.session_id,
+    ->     s.title AS session_title
+    -> FROM Events e
+    -> LEFT JOIN Sessions s
+    ->     ON e.event_id = s.event_id;
++----------+-------------------------------+-----------+------------+-------------------+
+| event_id | title                         | status    | session_id | session_title     |
++----------+-------------------------------+-----------+------------+-------------------+
+|        1 | Tech Innovators Meetup        | upcoming  |          1 | Opening Keynote   |
+|        1 | Tech Innovators Meetup        | upcoming  |          2 | Future of Web Dev |
+|        2 | AI & ML Conference            | completed |          3 | AI in Healthcare  |
+|        3 | Frontend Development Bootcamp | upcoming  |          4 | Intro to HTML5    |
++----------+-------------------------------+-----------+------------+-------------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     e.event_id,
+    ->     e.title,
+    ->     COUNT(s.session_id) AS total_sessions
+    -> FROM Events e
+    -> LEFT JOIN Sessions s
+    ->     ON e.event_id = s.event_id
+    -> WHERE e.status = 'upcoming'
+    -> GROUP BY e.event_id, e.title;
++----------+-------------------------------+----------------+
+| event_id | title                         | total_sessions |
++----------+-------------------------------+----------------+
+|        1 | Tech Innovators Meetup        |              2 |
+|        3 | Frontend Development Bootcamp |              1 |
++----------+-------------------------------+----------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Users;
++---------+---------------+---------------------+-------------+-------------------+
+| user_id | full_name     | email               | city        | registration_date |
++---------+---------------+---------------------+-------------+-------------------+
+|       1 | Alice Johnson | alice@example.com   | New York    | 2024-12-01        |
+|       2 | Bob Smith     | bob@example.com     | Los Angeles | 2024-12-05        |
+|       3 | Charlie Lee   | charlie@example.com | Chicago     | 2024-12-10        |
+|       4 | Diana King    | diana@example.com   | New York    | 2025-01-15        |
+|       5 | Ethan Hunt    | ethan@example.com   | Los Angeles | 2025-02-01        |
++---------+---------------+---------------------+-------------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Events;
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+| event_id | title                         | description                           | city        | start_date          | end_date            | status    | organizer_id |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+|        1 | Tech Innovators Meetup        | A meetup for tech enthusiasts.        | New York    | 2025-06-10 10:00:00 | 2025-06-10 16:00:00 | upcoming  |            1 |
+|        2 | AI & ML Conference            | Conference on AI and ML advancements. | Chicago     | 2025-05-15 09:00:00 | 2025-05-15 17:00:00 | completed |            3 |
+|        3 | Frontend Development Bootcamp | Hands-on training on frontend tech.   | Los Angeles | 2025-07-01 10:00:00 | 2025-07-03 16:00:00 | upcoming  |            2 |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     u.user_id,
+    ->     u.full_name,
+    ->     COUNT(e.event_id) AS total_events
+    -> FROM Users u
+    -> LEFT JOIN Events e
+    ->     ON u.user_id = e.organizer_id
+    -> GROUP BY u.user_id, u.full_name;
++---------+---------------+--------------+
+| user_id | full_name     | total_events |
++---------+---------------+--------------+
+|       1 | Alice Johnson |            1 |
+|       2 | Bob Smith     |            1 |
+|       3 | Charlie Lee   |            1 |
+|       4 | Diana King    |            0 |
+|       5 | Ethan Hunt    |            0 |
++---------+---------------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     u.user_id,
+    ->     u.full_name,
+    ->     COUNT(e.event_id) AS total_events,
+    ->     SUM(CASE WHEN e.status = 'upcoming' THEN 1 ELSE 0 END) AS upcoming_events,
+    ->     SUM(CASE WHEN e.status = 'completed' THEN 1 ELSE 0 END) AS completed_events,
+    ->     SUM(CASE WHEN e.status = 'cancelled' THEN 1 ELSE 0 END) AS cancelled_events
+    -> FROM Users u
+    -> LEFT JOIN Events e
+    ->     ON u.user_id = e.organizer_id
+    -> GROUP BY u.user_id, u.full_name;
++---------+---------------+--------------+-----------------+------------------+------------------+
+| user_id | full_name     | total_events | upcoming_events | completed_events | cancelled_events |
++---------+---------------+--------------+-----------------+------------------+------------------+
+|       1 | Alice Johnson |            1 |               1 |                0 |                0 |
+|       2 | Bob Smith     |            1 |               1 |                0 |                0 |
+|       3 | Charlie Lee   |            1 |               0 |                1 |                0 |
+|       4 | Diana King    |            0 |               0 |                0 |                0 |
+|       5 | Ethan Hunt    |            0 |               0 |                0 |                0 |
++---------+---------------+--------------+-----------------+------------------+------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Events;
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+| event_id | title                         | description                           | city        | start_date          | end_date            | status    | organizer_id |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+|        1 | Tech Innovators Meetup        | A meetup for tech enthusiasts.        | New York    | 2025-06-10 10:00:00 | 2025-06-10 16:00:00 | upcoming  |            1 |
+|        2 | AI & ML Conference            | Conference on AI and ML advancements. | Chicago     | 2025-05-15 09:00:00 | 2025-05-15 17:00:00 | completed |            3 |
+|        3 | Frontend Development Bootcamp | Hands-on training on frontend tech.   | Los Angeles | 2025-07-01 10:00:00 | 2025-07-03 16:00:00 | upcoming  |            2 |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Registrations;
++-----------------+---------+----------+-------------------+
+| registration_id | user_id | event_id | registration_date |
++-----------------+---------+----------+-------------------+
+|               1 |       1 |        1 | 2025-05-01        |
+|               2 |       2 |        1 | 2025-05-02        |
+|               3 |       3 |        2 | 2025-04-30        |
+|               4 |       4 |        2 | 2025-04-28        |
+|               5 |       5 |        3 | 2025-06-15        |
++-----------------+---------+----------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Feedback;
++-------------+---------+----------+--------+-------------------+---------------+
+| feedback_id | user_id | event_id | rating | comments          | feedback_date |
++-------------+---------+----------+--------+-------------------+---------------+
+|           1 |       3 |        2 |      4 | Great insights!   | 2025-05-16    |
+|           2 |       4 |        2 |      5 | Very informative. | 2025-05-16    |
+|           3 |       2 |        1 |      3 | Could be better.  | 2025-06-11    |
++-------------+---------+----------+--------+-------------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     e.event_id,
+    ->     e.title,
+    ->     r.user_id AS registered_user,
+    ->     f.feedback_id
+    -> FROM Events e
+    -> JOIN Registrations r
+    ->     ON e.event_id = r.event_id
+    -> LEFT JOIN Feedback f
+    ->     ON e.event_id = f.event_id;
++----------+-------------------------------+-----------------+-------------+
+| event_id | title                         | registered_user | feedback_id |
++----------+-------------------------------+-----------------+-------------+
+|        1 | Tech Innovators Meetup        |               1 |           3 |
+|        1 | Tech Innovators Meetup        |               2 |           3 |
+|        2 | AI & ML Conference            |               3 |           1 |
+|        2 | AI & ML Conference            |               3 |           2 |
+|        2 | AI & ML Conference            |               4 |           1 |
+|        2 | AI & ML Conference            |               4 |           2 |
+|        3 | Frontend Development Bootcamp |               5 |        NULL |
++----------+-------------------------------+-----------------+-------------+
+7 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     e.event_id,
+    ->     e.title
+    -> FROM Events e
+    -> WHERE EXISTS (
+    ->     SELECT 1
+    ->     FROM Registrations r
+    ->     WHERE r.event_id = e.event_id
+    -> )
+    -> AND NOT EXISTS (
+    ->     SELECT 1
+    ->     FROM Feedback f
+    ->     WHERE f.event_id = e.event_id
+    -> );
++----------+-------------------------------+
+| event_id | title                         |
++----------+-------------------------------+
+|        3 | Frontend Development Bootcamp |
++----------+-------------------------------+
+1 row in set (0.04 sec)
+
+mysql> SELECT * FROM Users;
++---------+---------------+---------------------+-------------+-------------------+
+| user_id | full_name     | email               | city        | registration_date |
++---------+---------------+---------------------+-------------+-------------------+
+|       1 | Alice Johnson | alice@example.com   | New York    | 2024-12-01        |
+|       2 | Bob Smith     | bob@example.com     | Los Angeles | 2024-12-05        |
+|       3 | Charlie Lee   | charlie@example.com | Chicago     | 2024-12-10        |
+|       4 | Diana King    | diana@example.com   | New York    | 2025-01-15        |
+|       5 | Ethan Hunt    | ethan@example.com   | Los Angeles | 2025-02-01        |
++---------+---------------+---------------------+-------------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     registration_date,
+    ->     COUNT(*) AS daily_users
+    -> FROM Users
+    -> GROUP BY registration_date
+    -> ORDER BY registration_date;
++-------------------+-------------+
+| registration_date | daily_users |
++-------------------+-------------+
+| 2024-12-01        |           1 |
+| 2024-12-05        |           1 |
+| 2024-12-10        |           1 |
+| 2025-01-15        |           1 |
+| 2025-02-01        |           1 |
++-------------------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     registration_date,
+    ->     COUNT(*) AS daily_users
+    -> FROM Users
+    -> WHERE registration_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+    -> GROUP BY registration_date
+    -> ORDER BY registration_date;
+Empty set (0.00 sec)
+
+mysql> SELECT * FROM Sessions;
++------------+----------+-------------------+---------------+---------------------+---------------------+
+| session_id | event_id | title             | speaker_name  | start_time          | end_time            |
++------------+----------+-------------------+---------------+---------------------+---------------------+
+|          1 |        1 | Opening Keynote   | Dr. Tech      | 2025-06-10 10:00:00 | 2025-06-10 11:00:00 |
+|          2 |        1 | Future of Web Dev | Alice Johnson | 2025-06-10 11:15:00 | 2025-06-10 12:30:00 |
+|          3 |        2 | AI in Healthcare  | Charlie Lee   | 2025-05-15 09:30:00 | 2025-05-15 11:00:00 |
+|          4 |        3 | Intro to HTML5    | Bob Smith     | 2025-07-01 10:00:00 | 2025-07-01 12:00:00 |
++------------+----------+-------------------+---------------+---------------------+---------------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     event_id,
+    ->     COUNT(*) AS total_sessions
+    -> FROM Sessions
+    -> GROUP BY event_id;
++----------+----------------+
+| event_id | total_sessions |
++----------+----------------+
+|        1 |              2 |
+|        2 |              1 |
+|        3 |              1 |
++----------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     event_id,
+    ->     COUNT(*) AS total_sessions
+    -> FROM Sessions
+    -> GROUP BY event_id
+    -> HAVING COUNT(*) = (
+    ->     SELECT MAX(session_count)
+    ->     FROM (
+    ->         SELECT COUNT(*) AS session_count
+    ->         FROM Sessions
+    ->         GROUP BY event_id
+    ->     ) AS temp
+    -> );
++----------+----------------+
+| event_id | total_sessions |
++----------+----------------+
+|        1 |              2 |
++----------+----------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT * FROM Feedback;
++-------------+---------+----------+--------+-------------------+---------------+
+| feedback_id | user_id | event_id | rating | comments          | feedback_date |
++-------------+---------+----------+--------+-------------------+---------------+
+|           1 |       3 |        2 |      4 | Great insights!   | 2025-05-16    |
+|           2 |       4 |        2 |      5 | Very informative. | 2025-05-16    |
+|           3 |       2 |        1 |      3 | Could be better.  | 2025-06-11    |
++-------------+---------+----------+--------+-------------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Events;
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+| event_id | title                         | description                           | city        | start_date          | end_date            | status    | organizer_id |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+|        1 | Tech Innovators Meetup        | A meetup for tech enthusiasts.        | New York    | 2025-06-10 10:00:00 | 2025-06-10 16:00:00 | upcoming  |            1 |
+|        2 | AI & ML Conference            | Conference on AI and ML advancements. | Chicago     | 2025-05-15 09:00:00 | 2025-05-15 17:00:00 | completed |            3 |
+|        3 | Frontend Development Bootcamp | Hands-on training on frontend tech.   | Los Angeles | 2025-07-01 10:00:00 | 2025-07-03 16:00:00 | upcoming  |            2 |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     e.city,
+    ->     f.rating
+    -> FROM Feedback f
+    -> JOIN Events e
+    ->     ON f.event_id = e.event_id;
++----------+--------+
+| city     | rating |
++----------+--------+
+| Chicago  |      4 |
+| Chicago  |      5 |
+| New York |      3 |
++----------+--------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     e.city,
+    ->     AVG(f.rating) AS average_rating
+    -> FROM Feedback f
+    -> JOIN Events e
+    ->     ON f.event_id = e.event_id
+    -> GROUP BY e.city
+    -> ORDER BY average_rating DESC;
++----------+----------------+
+| city     | average_rating |
++----------+----------------+
+| Chicago  |         4.5000 |
+| New York |         3.0000 |
++----------+----------------+
+2 rows in set (0.01 sec)
+
+mysql> SELECT * FROM Events;
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+| event_id | title                         | description                           | city        | start_date          | end_date            | status    | organizer_id |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+|        1 | Tech Innovators Meetup        | A meetup for tech enthusiasts.        | New York    | 2025-06-10 10:00:00 | 2025-06-10 16:00:00 | upcoming  |            1 |
+|        2 | AI & ML Conference            | Conference on AI and ML advancements. | Chicago     | 2025-05-15 09:00:00 | 2025-05-15 17:00:00 | completed |            3 |
+|        3 | Frontend Development Bootcamp | Hands-on training on frontend tech.   | Los Angeles | 2025-07-01 10:00:00 | 2025-07-03 16:00:00 | upcoming  |            2 |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Registrations;
++-----------------+---------+----------+-------------------+
+| registration_id | user_id | event_id | registration_date |
++-----------------+---------+----------+-------------------+
+|               1 |       1 |        1 | 2025-05-01        |
+|               2 |       2 |        1 | 2025-05-02        |
+|               3 |       3 |        2 | 2025-04-30        |
+|               4 |       4 |        2 | 2025-04-28        |
+|               5 |       5 |        3 | 2025-06-15        |
++-----------------+---------+----------+-------------------+
+5 rows in set (0.04 sec)
+
+mysql> SELECT
+    ->     event_id,
+    ->     COUNT(user_id) AS total_registrations
+    -> FROM Registrations
+    -> GROUP BY event_id;
++----------+---------------------+
+| event_id | total_registrations |
++----------+---------------------+
+|        1 |                   2 |
+|        2 |                   2 |
+|        3 |                   1 |
++----------+---------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     e.event_id,
+    ->     e.title,
+    ->     COUNT(r.user_id) AS total_registrations
+    -> FROM Events e
+    -> JOIN Registrations r
+    ->     ON e.event_id = r.event_id
+    -> GROUP BY e.event_id, e.title
+    -> ORDER BY total_registrations DESC
+    -> LIMIT 3;
++----------+-------------------------------+---------------------+
+| event_id | title                         | total_registrations |
++----------+-------------------------------+---------------------+
+|        1 | Tech Innovators Meetup        |                   2 |
+|        2 | AI & ML Conference            |                   2 |
+|        3 | Frontend Development Bootcamp |                   1 |
++----------+-------------------------------+---------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Sessions;
++------------+----------+-------------------+---------------+---------------------+---------------------+
+| session_id | event_id | title             | speaker_name  | start_time          | end_time            |
++------------+----------+-------------------+---------------+---------------------+---------------------+
+|          1 |        1 | Opening Keynote   | Dr. Tech      | 2025-06-10 10:00:00 | 2025-06-10 11:00:00 |
+|          2 |        1 | Future of Web Dev | Alice Johnson | 2025-06-10 11:15:00 | 2025-06-10 12:30:00 |
+|          3 |        2 | AI in Healthcare  | Charlie Lee   | 2025-05-15 09:30:00 | 2025-05-15 11:00:00 |
+|          4 |        3 | Intro to HTML5    | Bob Smith     | 2025-07-01 10:00:00 | 2025-07-01 12:00:00 |
++------------+----------+-------------------+---------------+---------------------+---------------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     s1.event_id,
+    ->     s1.session_id AS session_1,
+    ->     s1.title AS session_1_title,
+    ->     s1.start_time AS s1_start,
+    ->     s1.end_time AS s1_end,
+    ->     s2.session_id AS session_2,
+    ->     s2.title AS session_2_title,
+    ->     s2.start_time AS s2_start,
+    ->     s2.end_time AS s2_end
+    -> FROM Sessions s1
+    -> JOIN Sessions s2
+    ->     ON s1.event_id = s2.event_id
+    ->     AND s1.session_id <> s2.session_id;
++----------+-----------+-------------------+---------------------+---------------------+-----------+-------------------+---------------------+---------------------+
+| event_id | session_1 | session_1_title   | s1_start            | s1_end              | session_2 | session_2_title   | s2_start            | s2_end              |
++----------+-----------+-------------------+---------------------+---------------------+-----------+-------------------+---------------------+---------------------+
+|        1 |         2 | Future of Web Dev | 2025-06-10 11:15:00 | 2025-06-10 12:30:00 |         1 | Opening Keynote   | 2025-06-10 10:00:00 | 2025-06-10 11:00:00 |
+|        1 |         1 | Opening Keynote   | 2025-06-10 10:00:00 | 2025-06-10 11:00:00 |         2 | Future of Web Dev | 2025-06-10 11:15:00 | 2025-06-10 12:30:00 |
++----------+-----------+-------------------+---------------------+---------------------+-----------+-------------------+---------------------+---------------------+
+2 rows in set (0.05 sec)
+
+mysql> SELECT
+    ->     s1.event_id,
+    ->     s1.session_id AS session_1,
+    ->     s1.title AS session_1_title,
+    ->     s2.session_id AS session_2,
+    ->     s2.title AS session_2_title,
+    ->     s1.start_time,
+    ->     s1.end_time,
+    ->     s2.start_time,
+    ->     s2.end_time
+    -> FROM Sessions s1
+    -> JOIN Sessions s2
+    ->     ON s1.event_id = s2.event_id
+    ->     AND s1.session_id < s2.session_id
+    -> WHERE
+    ->     s1.start_time < s2.end_time
+    ->     AND s1.end_time > s2.start_time;
+Empty set (0.06 sec)
+
+mysql> SELECT * FROM Users;
++---------+---------------+---------------------+-------------+-------------------+
+| user_id | full_name     | email               | city        | registration_date |
++---------+---------------+---------------------+-------------+-------------------+
+|       1 | Alice Johnson | alice@example.com   | New York    | 2024-12-01        |
+|       2 | Bob Smith     | bob@example.com     | Los Angeles | 2024-12-05        |
+|       3 | Charlie Lee   | charlie@example.com | Chicago     | 2024-12-10        |
+|       4 | Diana King    | diana@example.com   | New York    | 2025-01-15        |
+|       5 | Ethan Hunt    | ethan@example.com   | Los Angeles | 2025-02-01        |
++---------+---------------+---------------------+-------------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Registrations;
++-----------------+---------+----------+-------------------+
+| registration_id | user_id | event_id | registration_date |
++-----------------+---------+----------+-------------------+
+|               1 |       1 |        1 | 2025-05-01        |
+|               2 |       2 |        1 | 2025-05-02        |
+|               3 |       3 |        2 | 2025-04-30        |
+|               4 |       4 |        2 | 2025-04-28        |
+|               5 |       5 |        3 | 2025-06-15        |
++-----------------+---------+----------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     user_id,
+    ->     full_name,
+    ->     registration_date
+    -> FROM Users
+    -> WHERE registration_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY);
+Empty set (0.00 sec)
+
+mysql> SELECT
+    ->     u.user_id,
+    ->     u.full_name,
+    ->     u.registration_date
+    -> FROM Users u
+    -> WHERE u.registration_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+    -> AND NOT EXISTS (
+    ->     SELECT 1
+    ->     FROM Registrations r
+    ->     WHERE r.user_id = u.user_id
+    -> );
+Empty set (0.00 sec)
+
+mysql> SELECT * FROM Sessions;
++------------+----------+-------------------+---------------+---------------------+---------------------+
+| session_id | event_id | title             | speaker_name  | start_time          | end_time            |
++------------+----------+-------------------+---------------+---------------------+---------------------+
+|          1 |        1 | Opening Keynote   | Dr. Tech      | 2025-06-10 10:00:00 | 2025-06-10 11:00:00 |
+|          2 |        1 | Future of Web Dev | Alice Johnson | 2025-06-10 11:15:00 | 2025-06-10 12:30:00 |
+|          3 |        2 | AI in Healthcare  | Charlie Lee   | 2025-05-15 09:30:00 | 2025-05-15 11:00:00 |
+|          4 |        3 | Intro to HTML5    | Bob Smith     | 2025-07-01 10:00:00 | 2025-07-01 12:00:00 |
++------------+----------+-------------------+---------------+---------------------+---------------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     speaker_name,
+    ->     COUNT(*) AS total_sessions
+    -> FROM Sessions
+    -> GROUP BY speaker_name;
++---------------+----------------+
+| speaker_name  | total_sessions |
++---------------+----------------+
+| Dr. Tech      |              1 |
+| Alice Johnson |              1 |
+| Charlie Lee   |              1 |
+| Bob Smith     |              1 |
++---------------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     speaker_name,
+    ->     COUNT(*) AS total_sessions
+    -> FROM Sessions
+    -> GROUP BY speaker_name
+    -> HAVING COUNT(*) > 1;
+Empty set (0.03 sec)
+
+mysql> SELECT * FROM Events;
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+| event_id | title                         | description                           | city        | start_date          | end_date            | status    | organizer_id |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+|        1 | Tech Innovators Meetup        | A meetup for tech enthusiasts.        | New York    | 2025-06-10 10:00:00 | 2025-06-10 16:00:00 | upcoming  |            1 |
+|        2 | AI & ML Conference            | Conference on AI and ML advancements. | Chicago     | 2025-05-15 09:00:00 | 2025-05-15 17:00:00 | completed |            3 |
+|        3 | Frontend Development Bootcamp | Hands-on training on frontend tech.   | Los Angeles | 2025-07-01 10:00:00 | 2025-07-03 16:00:00 | upcoming  |            2 |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Resources;
++-------------+----------+---------------+-----------------------------------------------------+---------------------+
+| resource_id | event_id | resource_type | resource_url                                        | uploaded_at         |
++-------------+----------+---------------+-----------------------------------------------------+---------------------+
+|           1 |        1 | pdf           | https://portal.com/resources/tech_meetup_agenda.pdf | 2025-05-01 10:00:00 |
+|           2 |        2 | image         | https://portal.com/resources/ai_poster.jpg          | 2025-04-20 09:00:00 |
+|           3 |        3 | link          | https://portal.com/resources/html5_docs             | 2025-06-25 15:00:00 |
++-------------+----------+---------------+-----------------------------------------------------+---------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     e.event_id,
+    ->     e.title,
+    ->     r.resource_id,
+    ->     r.resource_type
+    -> FROM Events e
+    -> LEFT JOIN Resources r
+    ->     ON e.event_id = r.event_id;
++----------+-------------------------------+-------------+---------------+
+| event_id | title                         | resource_id | resource_type |
++----------+-------------------------------+-------------+---------------+
+|        1 | Tech Innovators Meetup        |           1 | pdf           |
+|        2 | AI & ML Conference            |           2 | image         |
+|        3 | Frontend Development Bootcamp |           3 | link          |
++----------+-------------------------------+-------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     e.event_id,
+    ->     e.title
+    -> FROM Events e
+    -> LEFT JOIN Resources r
+    ->     ON e.event_id = r.event_id
+    -> WHERE r.resource_id IS NULL;
+Empty set (0.00 sec)
+
+mysql> SELECT * FROM Events;
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+| event_id | title                         | description                           | city        | start_date          | end_date            | status    | organizer_id |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+|        1 | Tech Innovators Meetup        | A meetup for tech enthusiasts.        | New York    | 2025-06-10 10:00:00 | 2025-06-10 16:00:00 | upcoming  |            1 |
+|        2 | AI & ML Conference            | Conference on AI and ML advancements. | Chicago     | 2025-05-15 09:00:00 | 2025-05-15 17:00:00 | completed |            3 |
+|        3 | Frontend Development Bootcamp | Hands-on training on frontend tech.   | Los Angeles | 2025-07-01 10:00:00 | 2025-07-03 16:00:00 | upcoming  |            2 |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Registrations;
++-----------------+---------+----------+-------------------+
+| registration_id | user_id | event_id | registration_date |
++-----------------+---------+----------+-------------------+
+|               1 |       1 |        1 | 2025-05-01        |
+|               2 |       2 |        1 | 2025-05-02        |
+|               3 |       3 |        2 | 2025-04-30        |
+|               4 |       4 |        2 | 2025-04-28        |
+|               5 |       5 |        3 | 2025-06-15        |
++-----------------+---------+----------+-------------------+
+5 rows in set (0.03 sec)
+
+mysql> SELECT * FROM Feedback;
++-------------+---------+----------+--------+-------------------+---------------+
+| feedback_id | user_id | event_id | rating | comments          | feedback_date |
++-------------+---------+----------+--------+-------------------+---------------+
+|           1 |       3 |        2 |      4 | Great insights!   | 2025-05-16    |
+|           2 |       4 |        2 |      5 | Very informative. | 2025-05-16    |
+|           3 |       2 |        1 |      3 | Could be better.  | 2025-06-11    |
++-------------+---------+----------+--------+-------------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     e.event_id,
+    ->     e.title,
+    ->     e.status,
+    ->     r.user_id,
+    ->     f.rating
+    -> FROM Events e
+    -> LEFT JOIN Registrations r
+    ->     ON e.event_id = r.event_id
+    -> LEFT JOIN Feedback f
+    ->     ON e.event_id = f.event_id;
++----------+-------------------------------+-----------+---------+--------+
+| event_id | title                         | status    | user_id | rating |
++----------+-------------------------------+-----------+---------+--------+
+|        1 | Tech Innovators Meetup        | upcoming  |       1 |      3 |
+|        1 | Tech Innovators Meetup        | upcoming  |       2 |      3 |
+|        2 | AI & ML Conference            | completed |       3 |      4 |
+|        2 | AI & ML Conference            | completed |       3 |      5 |
+|        2 | AI & ML Conference            | completed |       4 |      4 |
+|        2 | AI & ML Conference            | completed |       4 |      5 |
+|        3 | Frontend Development Bootcamp | upcoming  |       5 |   NULL |
++----------+-------------------------------+-----------+---------+--------+
+7 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     e.event_id,
+    ->     e.title,
+    ->     COUNT(DISTINCT r.user_id) AS total_registrations,
+    ->     AVG(f.rating) AS average_rating
+    -> FROM Events e
+    -> LEFT JOIN Registrations r
+    ->     ON e.event_id = r.event_id
+    -> LEFT JOIN Feedback f
+    ->     ON e.event_id = f.event_id
+    -> WHERE e.status = 'completed'
+    -> GROUP BY e.event_id, e.title;
++----------+--------------------+---------------------+----------------+
+| event_id | title              | total_registrations | average_rating |
++----------+--------------------+---------------------+----------------+
+|        2 | AI & ML Conference |                   2 |         4.5000 |
++----------+--------------------+---------------------+----------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM Users;
++---------+---------------+---------------------+-------------+-------------------+
+| user_id | full_name     | email               | city        | registration_date |
++---------+---------------+---------------------+-------------+-------------------+
+|       1 | Alice Johnson | alice@example.com   | New York    | 2024-12-01        |
+|       2 | Bob Smith     | bob@example.com     | Los Angeles | 2024-12-05        |
+|       3 | Charlie Lee   | charlie@example.com | Chicago     | 2024-12-10        |
+|       4 | Diana King    | diana@example.com   | New York    | 2025-01-15        |
+|       5 | Ethan Hunt    | ethan@example.com   | Los Angeles | 2025-02-01        |
++---------+---------------+---------------------+-------------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Registrations;
++-----------------+---------+----------+-------------------+
+| registration_id | user_id | event_id | registration_date |
++-----------------+---------+----------+-------------------+
+|               1 |       1 |        1 | 2025-05-01        |
+|               2 |       2 |        1 | 2025-05-02        |
+|               3 |       3 |        2 | 2025-04-30        |
+|               4 |       4 |        2 | 2025-04-28        |
+|               5 |       5 |        3 | 2025-06-15        |
++-----------------+---------+----------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Feedback;
++-------------+---------+----------+--------+-------------------+---------------+
+| feedback_id | user_id | event_id | rating | comments          | feedback_date |
++-------------+---------+----------+--------+-------------------+---------------+
+|           1 |       3 |        2 |      4 | Great insights!   | 2025-05-16    |
+|           2 |       4 |        2 |      5 | Very informative. | 2025-05-16    |
+|           3 |       2 |        1 |      3 | Could be better.  | 2025-06-11    |
++-------------+---------+----------+--------+-------------------+---------------+
+3 rows in set (0.03 sec)
+
+mysql> SELECT
+    ->     u.user_id,
+    ->     u.full_name,
+    ->     r.event_id AS registered_event,
+    ->     f.feedback_id,
+    ->     f.rating
+    -> FROM Users u
+    -> LEFT JOIN Registrations r
+    ->     ON u.user_id = r.user_id
+    -> LEFT JOIN Feedback f
+    ->     ON u.user_id = f.user_id;
++---------+---------------+------------------+-------------+--------+
+| user_id | full_name     | registered_event | feedback_id | rating |
++---------+---------------+------------------+-------------+--------+
+|       1 | Alice Johnson |                1 |        NULL |   NULL |
+|       2 | Bob Smith     |                1 |           3 |      3 |
+|       3 | Charlie Lee   |                2 |           1 |      4 |
+|       4 | Diana King    |                2 |           2 |      5 |
+|       5 | Ethan Hunt    |                3 |        NULL |   NULL |
++---------+---------------+------------------+-------------+--------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     u.user_id,
+    ->     u.full_name,
+    ->     COUNT(DISTINCT r.event_id) AS events_attended,
+    ->     COUNT(f.feedback_id) AS feedback_submitted
+    -> FROM Users u
+    -> LEFT JOIN Registrations r
+    ->     ON u.user_id = r.user_id
+    -> LEFT JOIN Feedback f
+    ->     ON u.user_id = f.user_id
+    -> GROUP BY u.user_id, u.full_name;
++---------+---------------+-----------------+--------------------+
+| user_id | full_name     | events_attended | feedback_submitted |
++---------+---------------+-----------------+--------------------+
+|       1 | Alice Johnson |               1 |                  0 |
+|       2 | Bob Smith     |               1 |                  1 |
+|       3 | Charlie Lee   |               1 |                  1 |
+|       4 | Diana King    |               1 |                  1 |
+|       5 | Ethan Hunt    |               1 |                  0 |
++---------+---------------+-----------------+--------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Feedback;
++-------------+---------+----------+--------+-------------------+---------------+
+| feedback_id | user_id | event_id | rating | comments          | feedback_date |
++-------------+---------+----------+--------+-------------------+---------------+
+|           1 |       3 |        2 |      4 | Great insights!   | 2025-05-16    |
+|           2 |       4 |        2 |      5 | Very informative. | 2025-05-16    |
+|           3 |       2 |        1 |      3 | Could be better.  | 2025-06-11    |
++-------------+---------+----------+--------+-------------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Users;
++---------+---------------+---------------------+-------------+-------------------+
+| user_id | full_name     | email               | city        | registration_date |
++---------+---------------+---------------------+-------------+-------------------+
+|       1 | Alice Johnson | alice@example.com   | New York    | 2024-12-01        |
+|       2 | Bob Smith     | bob@example.com     | Los Angeles | 2024-12-05        |
+|       3 | Charlie Lee   | charlie@example.com | Chicago     | 2024-12-10        |
+|       4 | Diana King    | diana@example.com   | New York    | 2025-01-15        |
+|       5 | Ethan Hunt    | ethan@example.com   | Los Angeles | 2025-02-01        |
++---------+---------------+---------------------+-------------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     user_id,
+    ->     COUNT(*) AS total_feedback
+    -> FROM Feedback
+    -> GROUP BY user_id;
++---------+----------------+
+| user_id | total_feedback |
++---------+----------------+
+|       2 |              1 |
+|       3 |              1 |
+|       4 |              1 |
++---------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     u.user_id,
+    ->     u.full_name,
+    ->     COUNT(f.feedback_id) AS total_feedback
+    -> FROM Users u
+    -> JOIN Feedback f
+    ->     ON u.user_id = f.user_id
+    -> GROUP BY u.user_id, u.full_name
+    -> ORDER BY total_feedback DESC
+    -> LIMIT 5;
++---------+-------------+----------------+
+| user_id | full_name   | total_feedback |
++---------+-------------+----------------+
+|       2 | Bob Smith   |              1 |
+|       3 | Charlie Lee |              1 |
+|       4 | Diana King  |              1 |
++---------+-------------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Registrations;
++-----------------+---------+----------+-------------------+
+| registration_id | user_id | event_id | registration_date |
++-----------------+---------+----------+-------------------+
+|               1 |       1 |        1 | 2025-05-01        |
+|               2 |       2 |        1 | 2025-05-02        |
+|               3 |       3 |        2 | 2025-04-30        |
+|               4 |       4 |        2 | 2025-04-28        |
+|               5 |       5 |        3 | 2025-06-15        |
++-----------------+---------+----------+-------------------+
+5 rows in set (0.04 sec)
+
+mysql> SELECT
+    ->     user_id,
+    ->     event_id,
+    ->     COUNT(*) AS registration_count
+    -> FROM Registrations
+    -> GROUP BY user_id, event_id;
++---------+----------+--------------------+
+| user_id | event_id | registration_count |
++---------+----------+--------------------+
+|       1 |        1 |                  1 |
+|       2 |        1 |                  1 |
+|       3 |        2 |                  1 |
+|       4 |        2 |                  1 |
+|       5 |        3 |                  1 |
++---------+----------+--------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     user_id,
+    ->     event_id,
+    ->     COUNT(*) AS duplicate_count
+    -> FROM Registrations
+    -> GROUP BY user_id, event_id
+    -> HAVING COUNT(*) > 1;
+Empty set (0.00 sec)
+
+mysql> SELECT * FROM Registrations;
++-----------------+---------+----------+-------------------+
+| registration_id | user_id | event_id | registration_date |
++-----------------+---------+----------+-------------------+
+|               1 |       1 |        1 | 2025-05-01        |
+|               2 |       2 |        1 | 2025-05-02        |
+|               3 |       3 |        2 | 2025-04-30        |
+|               4 |       4 |        2 | 2025-04-28        |
+|               5 |       5 |        3 | 2025-06-15        |
++-----------------+---------+----------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     DATE_FORMAT(registration_date, '%Y-%m') AS month,
+    ->     COUNT(*) AS total_registrations
+    -> FROM Registrations
+    -> GROUP BY DATE_FORMAT(registration_date, '%Y-%m')
+    -> ORDER BY month;
++---------+---------------------+
+| month   | total_registrations |
++---------+---------------------+
+| 2025-04 |                   2 |
+| 2025-05 |                   2 |
+| 2025-06 |                   1 |
++---------+---------------------+
+3 rows in set (0.05 sec)
+
+mysql> SELECT
+    ->     DATE_FORMAT(registration_date, '%Y-%m') AS month,
+    ->     COUNT(*) AS total_registrations
+    -> FROM Registrations
+    -> WHERE registration_date >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+    -> GROUP BY DATE_FORMAT(registration_date, '%Y-%m')
+    -> ORDER BY month;
++---------+---------------------+
+| month   | total_registrations |
++---------+---------------------+
+| 2025-06 |                   1 |
++---------+---------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM Sessions;
++------------+----------+-------------------+---------------+---------------------+---------------------+
+| session_id | event_id | title             | speaker_name  | start_time          | end_time            |
++------------+----------+-------------------+---------------+---------------------+---------------------+
+|          1 |        1 | Opening Keynote   | Dr. Tech      | 2025-06-10 10:00:00 | 2025-06-10 11:00:00 |
+|          2 |        1 | Future of Web Dev | Alice Johnson | 2025-06-10 11:15:00 | 2025-06-10 12:30:00 |
+|          3 |        2 | AI in Healthcare  | Charlie Lee   | 2025-05-15 09:30:00 | 2025-05-15 11:00:00 |
+|          4 |        3 | Intro to HTML5    | Bob Smith     | 2025-07-01 10:00:00 | 2025-07-01 12:00:00 |
++------------+----------+-------------------+---------------+---------------------+---------------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     session_id,
+    ->     event_id,
+    ->     title,
+    ->     start_time,
+    ->     end_time,
+    ->     TIMESTAMPDIFF(MINUTE, start_time, end_time) AS duration_minutes
+    -> FROM Sessions;
++------------+----------+-------------------+---------------------+---------------------+------------------+
+| session_id | event_id | title             | start_time          | end_time            | duration_minutes |
++------------+----------+-------------------+---------------------+---------------------+------------------+
+|          1 |        1 | Opening Keynote   | 2025-06-10 10:00:00 | 2025-06-10 11:00:00 |               60 |
+|          2 |        1 | Future of Web Dev | 2025-06-10 11:15:00 | 2025-06-10 12:30:00 |               75 |
+|          3 |        2 | AI in Healthcare  | 2025-05-15 09:30:00 | 2025-05-15 11:00:00 |               90 |
+|          4 |        3 | Intro to HTML5    | 2025-07-01 10:00:00 | 2025-07-01 12:00:00 |              120 |
++------------+----------+-------------------+---------------------+---------------------+------------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     event_id,
+    ->     AVG(TIMESTAMPDIFF(MINUTE, start_time, end_time)) AS avg_session_duration
+    -> FROM Sessions
+    -> GROUP BY event_id;
++----------+----------------------+
+| event_id | avg_session_duration |
++----------+----------------------+
+|        1 |              67.5000 |
+|        2 |              90.0000 |
+|        3 |             120.0000 |
++----------+----------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Events;
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+| event_id | title                         | description                           | city        | start_date          | end_date            | status    | organizer_id |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+|        1 | Tech Innovators Meetup        | A meetup for tech enthusiasts.        | New York    | 2025-06-10 10:00:00 | 2025-06-10 16:00:00 | upcoming  |            1 |
+|        2 | AI & ML Conference            | Conference on AI and ML advancements. | Chicago     | 2025-05-15 09:00:00 | 2025-05-15 17:00:00 | completed |            3 |
+|        3 | Frontend Development Bootcamp | Hands-on training on frontend tech.   | Los Angeles | 2025-07-01 10:00:00 | 2025-07-03 16:00:00 | upcoming  |            2 |
++----------+-------------------------------+---------------------------------------+-------------+---------------------+---------------------+-----------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Sessions;
++------------+----------+-------------------+---------------+---------------------+---------------------+
+| session_id | event_id | title             | speaker_name  | start_time          | end_time            |
++------------+----------+-------------------+---------------+---------------------+---------------------+
+|          1 |        1 | Opening Keynote   | Dr. Tech      | 2025-06-10 10:00:00 | 2025-06-10 11:00:00 |
+|          2 |        1 | Future of Web Dev | Alice Johnson | 2025-06-10 11:15:00 | 2025-06-10 12:30:00 |
+|          3 |        2 | AI in Healthcare  | Charlie Lee   | 2025-05-15 09:30:00 | 2025-05-15 11:00:00 |
+|          4 |        3 | Intro to HTML5    | Bob Smith     | 2025-07-01 10:00:00 | 2025-07-01 12:00:00 |
++------------+----------+-------------------+---------------+---------------------+---------------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->     e.event_id,
+    ->     e.title
+    -> FROM Events e
+    -> LEFT JOIN Sessions s
+    ->     ON e.event_id = s.event_id
+    -> WHERE s.session_id IS NULL;
+Empty set (0.00 sec)
+
+mysql>
